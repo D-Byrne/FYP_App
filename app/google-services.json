@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "343529932957",
+    "project_id": "fypoutsourceservice",
+    "storage_bucket": "fypoutsourceservice.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:343529932957:android:17e7b504ab31cc4fe0ec74",
+        "android_client_info": {
+          "package_name": "org.wit.fyp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "343529932957-0f7tu75i1udjv4a0v9a3hl2p6hmi0gvr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7OK04naUntFesn-q4UpXar7xuFtLlZL8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "343529932957-0f7tu75i1udjv4a0v9a3hl2p6hmi0gvr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
