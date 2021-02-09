@@ -6,4 +6,117 @@
     android:layout_height="match_parent"
     tools:context=".RegisterActivity">
 
+    <RelativeLayout
+        android:id="@+id/rel_lay_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/login_title"
+                    android:layout_marginTop="200dp"
+                    android:text="REGISTER USER"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/email_register_emailAdd"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="35dp"
+                    android:layout_marginEnd="20dp"
+                    android:hint="Email"
+                    app:boxBackgroundColor="@android:color/transparent"
+                    android:background="@android:color/transparent">
+
+                    <EditText
+                        android:id="@+id/edit_text_register_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textEmailAddress"
+                        tools:text="user@mail.com" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/email_register_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="20dp"
+                    android:hint="Password"
+                    app:boxBackgroundColor="@android:color/transparent"
+                    android:background="@android:color/transparent">
+
+                    <EditText
+                        android:id="@+id/edit_text_register_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textPassword"
+                        tools:text="password" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <Button
+                    android:id="@+id/btn_register"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:background="@color/red_gradient_two"
+                    android:text="Register" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/text_view_has_account"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:padding="5dp"
+                        android:text="Already Have an account?" />
+
+                    <TextView
+                        android:id="@+id/text_view_to_login"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:padding="5dp"
+                        android:text="Login"
+                        android:textStyle="bold" />
+
+
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
