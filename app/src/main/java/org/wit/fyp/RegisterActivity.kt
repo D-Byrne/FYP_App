@@ -86,10 +86,6 @@ class RegisterActivity : AppCompatActivity() {
            startActivity(Intent(this, LoginActivity::class.java))
         }
 
-
-
-
-
     }
 
     private fun writeToDatabase(){
@@ -98,8 +94,6 @@ class RegisterActivity : AppCompatActivity() {
         phoneNumber = edit_text_register_phone.text.toString().trim()
 
         var userModel = UserModel(firstName, lastName, phoneNumber)
-
-        var id = database.push().key
 
         database.child("users").child(customKey).setValue(userModel)
     }
