@@ -7,12 +7,29 @@ import android.text.TextUtils
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.Logger
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_register.*
+import org.wit.fyp.models.UserModel
 
 class RegisterActivity : AppCompatActivity() {
+
+    private lateinit var database: DatabaseReference
+    var firstName: String = ""
+    var lastName: String = ""
+    var phoneNumber: String = ""
+    var customKey: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+
+        FirebaseDatabase.getInstance().setLogLevel(Logger.Level.DEBUG)
+
+        database = Firebase.database.reference
 
         btn_register.setOnClickListener{
             when{
@@ -22,6 +39,18 @@ class RegisterActivity : AppCompatActivity() {
 
                 TextUtils.isEmpty(edit_text_register_password.text.toString().trim {it <= ' '}) ->{
                     Toast.makeText(this, "A password must be entered.", Toast.LENGTH_SHORT).show()
+                }
+
+                TextUtils.isEmpty(edit_text_register_first_name.text.toString().trim {it <= ' '}) -> {
+                    Toast.makeText(this, "First Name must be entered.", Toast.LENGTH_SHORT).show()
+                }
+
+                TextUtils.isEmpty(edit_text_register_last_name.text.toString().trim {it <= ' '}) ->{
+                    Toast.makeText(this, "Last Name must be entered.", Toast.LENGTH_SHORT).show()
+                }
+
+                TextUtils.isEmpty(edit_text_register_phone.text.toString().trim {it <= ' '}) ->{
+                    Toast.makeText(this, "Phone Number must be entered", Toast.LENGTH_SHORT).show()
                 }
 
                 else ->{
@@ -38,6 +67,11 @@ class RegisterActivity : AppCompatActivity() {
                                 intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                                 intent.putExtra("userID", firebaseUser.uid)
                                 intent.putExtra("emailStr", email)
+
+                                customKey = firebaseUser.uid
+
+                                writeToDatabase()
+
                                 startActivity(intent)
                                 finish()
                             } else{
@@ -49,7 +83,7 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         text_view_to_login.setOnClickListener{
-            startActivity(Intent(this, LoginActivity::class.java))
+           startActivity(Intent(this, LoginActivity::class.java))
         }
 
 
@@ -57,4 +91,17 @@ class RegisterActivity : AppCompatActivity() {
 
 
     }
+
+    private fun writeToDatabase(){
+        firstName = edit_text_register_first_name.text.toString().trim()
+        lastName = edit_text_register_last_name.text.toString().trim()
+        phoneNumber = edit_text_register_phone.text.toString().trim()
+
+        var userModel = UserModel(firstName, lastName, phoneNumber)
+
+        var id = database.push().key
+
+        database.child("users").child(customKey).setValue(userModel)
+    }
 }
+
