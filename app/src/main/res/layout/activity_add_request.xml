@@ -43,8 +43,29 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/add_request_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="35dp"
+                    android:layout_marginEnd="20dp"
+                    android:hint="Request Details"
+                    app:boxBackgroundColor="@android:color/transparent"
+                    android:background="@android:color/transparent">
+
+                    <EditText
+                        android:id="@+id/edit_text_add_request_details"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text|textMultiLine"
+                        android:scrollHorizontally="false"
+                        tools:text="Move Some Stuff For Me" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
                 <Button
-                    android:id="@+id/btn_add_request"
+                    android:id="@+id/btn_add_request_deadline"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
@@ -54,7 +75,53 @@
                     android:textStyle="bold"
                     android:foreground="?attr/selectableItemBackground"
                     android:background="@color/red_gradient_two"
+                    android:text="Request Deadline" />
+
+                <TextView
+                    android:id="@+id/deadline_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="15dp"
+                    android:textSize="18sp"
+                    android:text="DD - MM - YYYY"
+                    android:gravity="center" />
+
+                <Spinner
+                    android:id="@+id/spinner_select_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="47dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="30dp"
+                    android:gravity="center_horizontal"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:backgroundTint="@color/black"/>
+
+                <Button
+                    android:id="@+id/btn_add_request"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:background="@color/red_gradient_two"
                     android:text="Add Request" />
+
+                <TextView
+                    android:id="@+id/custom_spinner_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:padding="5dip"
+                    xmlns:android="http://schemas.android.com/apk/res/android" />
 
 
 
