@@ -57,7 +57,7 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
         database = Firebase.database.reference
 
         btn_add_request.setOnClickListener{
-            if( (edit_text_add_request_title.text.toString().trim().isNotEmpty()) && (edit_text_add_request_details.text.toString().trim().isNotEmpty()) && (deadline_label.text.toString().trim() != "DD - MM - YYYY") && (custom_spinner_item.text.toString().trim() != "Request Location")){
+            if( (edit_text_add_request_title.text.toString().trim().isNotEmpty()) && (edit_text_add_request_details.text.toString().trim().isNotEmpty()) && (deadline_label.text.toString().trim() != "DD - MM - YYYY") && ((custom_spinner_item.text.toString().trim() != "Request Location") || (custom_spinner_item.text.toString().trim() != "---------------------"))){
                 writeToDatabase()
                 startActivity(Intent(this, MainActivity::class.java))
                 finish()
