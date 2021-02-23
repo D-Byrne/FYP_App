@@ -29,10 +29,12 @@
             <TextView
                 android:id="@+id/list_request_details"
                 android:layout_width="wrap_content"
-                android:layout_height="90dp"
+                android:layout_height="60dp"
                 android:layout_margin="5dp"
-                android:textSize="20sp"
-                android:text="Details"/>
+                android:textSize="15sp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:text="Details wrap_content wrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_content"/>
 
             <View
                 android:layout_width="match_parent"
@@ -44,22 +46,26 @@
             <TextView
                 android:id="@+id/list_request_deadline"
                 android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                android:textSize="20sp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
                 android:text="Offers open until:"/>
 
             <TextView
                 android:id="@+id/list_request_location"
                 android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                android:textSize="20sp"
+                android:layout_marginLeft="5dp"
+                android:gravity=""
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
                 android:text="Location: Roscommon"/>
 
             <TextView
                 android:id="@+id/list_request_poster_name"
                 android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                android:textSize="20sp"
+                android:layout_marginLeft="5dp"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
                 android:text="Posted by"/>
 
             <TextView
@@ -67,7 +73,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="3dp"
                 android:textSize="2sp"
-                android:text="Posted by"/>
+                android:text=""
+                android:textColor="@color/white"/>
 
 
 
