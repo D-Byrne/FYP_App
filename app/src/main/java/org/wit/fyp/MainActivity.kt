@@ -58,6 +58,10 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        btn_to_view_requests.setOnClickListener{
+            startActivity(Intent(this, RequestListActivity::class.java))
+        }
+
         getData()
 
     }
