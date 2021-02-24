@@ -4,15 +4,15 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.Logger
+import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_add_request.*
+import kotlinx.android.synthetic.main.activity_main.*
 import org.wit.fyp.models.RequestModel
 import java.util.*
 
@@ -30,10 +30,15 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
 
     var username = ""
 
+    var firstName: String = ""
+    var lastName: String = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_request)
+
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid
 
         val countyNames = arrayOf("Request Location", "---------------------","Carlow", "Cavan", "Clare", "Cork", "Donegal", "Dublin", "Galway", "Kerry", "Kildare", "Kilkenny",
                                                                               "Laois", "Leitrim", "Limerick", "Longford", "Louth", "Mayo", "Meath", "Monaghan", "Offaly", "Roscommon",
@@ -59,7 +64,7 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
         btn_add_request.setOnClickListener{
             if( (edit_text_add_request_title.text.toString().trim().isNotEmpty()) && (edit_text_add_request_details.text.toString().trim().isNotEmpty()) && (deadline_label.text.toString().trim() != "DD - MM - YYYY") && ((custom_spinner_item.text.toString().trim() != "Request Location") || (custom_spinner_item.text.toString().trim() != "---------------------"))){
                 writeToDatabase()
-                startActivity(Intent(this, MainActivity::class.java))
+                startActivity(Intent(this, RequestListActivity::class.java))
                 finish()
             }else{
                 Toast.makeText(this, "All fields must be entered or selected.", Toast.LENGTH_SHORT).show()
@@ -67,6 +72,11 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
         }
 
         pickDate()
+
+
+        getData()
+
+        Toast.makeText(this, userId + username, Toast.LENGTH_SHORT).show()
 
     }
 
@@ -105,10 +115,31 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
         val id = database.push().key
 
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
-        var  username = intent.getStringExtra("username")
 
         var requestModel = RequestModel(userId, username!!,  title, details, deadline, location)
 
         database.child("requests").child(id!!).setValue(requestModel)
+    }
+
+    private fun getData(){
+        database.child("users").child(FirebaseAuth.getInstance().currentUser!!.uid).addValueEventListener(object: ValueEventListener {
+            override fun onCancelled(error: DatabaseError){
+                Log.e("cancel", error.toString())
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+
+                if(dataSnapshot.exists()) {
+
+                    firstName = dataSnapshot.child("firstName").getValue(String::class.java)!!
+                    lastName = dataSnapshot.child("lastName").getValue(String::class.java)!!
+
+                    username = firstName + " " + lastName
+
+                } else{
+
+                }
+            }
+        })
     }
 }

@@ -6,11 +6,31 @@
     android:layout_height="match_parent"
     tools:context=".RequestListActivity">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/request_list_nav_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/windowBackground"
+            app:itemBackground="@color/red_gradient_two"
+            app:itemIconTint="@color/white"
+            app:itemTextColor="@color/white"
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/menu_main"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
+        android:layout_above="@+id/request_list_nav_menu"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+
+
+    </RelativeLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
         btn_to_add_request.setOnClickListener{
             val intent = Intent(this, AddRequestActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             intent.putExtra("username", username)
 
             startActivity(intent)
@@ -62,52 +62,9 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this, RequestListActivity::class.java))
         }
 
-        getData()
+
 
     }
 
 
-    private fun getData(){
-        database.addValueEventListener(object: ValueEventListener{
-            override fun onCancelled(error: DatabaseError){
-                Log.e("cancel", error.toString())
-            }
-
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-
-                if(dataSnapshot.exists()) {
-
-                    firstName = dataSnapshot.child("firstName").getValue(String::class.java)!!
-                    lastName = dataSnapshot.child("lastName").getValue(String::class.java)!!
-                    phoneNumber = dataSnapshot.child("phoneNumber").getValue(String::class.java)!!
-
-                    username = firstName + " " + lastName
-
-                    text_view_first_name.setText("First Name: $firstName")
-                    text_view_last_name.setText("Last Name: $lastName")
-                    text_view_phone_number.setText("Phone Number: $phoneNumber")
-
-                } else {
-
-                    text_view_first_name.setText("First Name: Nope")
-                    text_view_last_name.setText("Last Name: Nope")
-                    text_view_phone_number.setText("Phone Number: Nope")
-
-                }
-
-                /*
-                text_view_first_name.setText("First Name: $firstName")
-                text_view_last_name.setText("Last Name: $lastName")
-                text_view_phone_number.setText("Phone Number: $phoneNumber")
-                 */
-
-            }
-        })
-    }
-
-
-
-    private fun writeDataMain(){
-
-    }
 }

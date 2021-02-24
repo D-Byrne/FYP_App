@@ -1,5 +1,6 @@
 package org.wit.fyp
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +14,10 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_request_list.*
 import org.wit.fyp.adapters.RequestAdapter
 import org.wit.fyp.models.RequestModel
+import org.jetbrains.anko.startActivityForResult
+import org.jetbrains.anko.intentFor
+
+
 
 class RequestListActivity : AppCompatActivity() {
 
@@ -26,6 +31,13 @@ class RequestListActivity : AppCompatActivity() {
 
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
+
+        request_list_nav_menu.setOnNavigationItemSelectedListener{
+            when(it.itemId){
+                R.id.menu_add_request -> {startActivityForResult<AddRequestActivity>(0)}
+            }
+            true
+        }
 
         getRequest()
     }
