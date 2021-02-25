@@ -15,6 +15,7 @@ class RequestAdapter(var list:ArrayList<RequestModel>) : RecyclerView.Adapter<Re
         var deadline = itemView.list_request_deadline
         var location = itemView.list_request_location
         var requestName = itemView.list_request_poster_name
+        var reqId = itemView.list_request_request_id
 
     }
 
@@ -33,6 +34,7 @@ class RequestAdapter(var list:ArrayList<RequestModel>) : RecyclerView.Adapter<Re
         holder.deadline.text = "Accepting offers until: " + list[position].requestDeadline
         holder.location.text = list[position].requestLocation
         holder.requestName.text = "Posted by: " + list[position].authorName
+        holder.reqId.text = list[position].reqId
     }
 
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -22,6 +23,8 @@ import org.jetbrains.anko.intentFor
 class RequestListActivity : AppCompatActivity() {
 
     private lateinit var database: DatabaseReference
+
+    var reqKey: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,12 +55,15 @@ class RequestListActivity : AppCompatActivity() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 var list = ArrayList<RequestModel>()
                 for(data in snapshot.children){
-                    val model = data.getValue(RequestModel::class.java)
+                    var model = data.getValue(RequestModel::class.java)
+                    reqKey = data.key!!
+                    model!!.reqId = reqKey
                     list.add(model as RequestModel)
                 }
                 if(list.size > 0){
                     val adapter = RequestAdapter(list)
                     recyclerView.adapter = adapter
+                    //Toast.makeText(applicationContext, reqId, Toast.LENGTH_SHORT).show()
                 }
             }
 
