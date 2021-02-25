@@ -17,14 +17,19 @@ import org.wit.fyp.adapters.RequestAdapter
 import org.wit.fyp.models.RequestModel
 import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.longToast
+import org.jetbrains.anko.toast
 
 
-
-class RequestListActivity : AppCompatActivity() {
+class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListener {
 
     private lateinit var database: DatabaseReference
 
     var reqKey: String = ""
+
+    var requestList = ArrayList<RequestModel>()
+   // var adapter = RequestAdapter(requestList, this)
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +43,7 @@ class RequestListActivity : AppCompatActivity() {
         request_list_nav_menu.setOnNavigationItemSelectedListener{
             when(it.itemId){
                 R.id.menu_add_request -> {startActivityForResult<AddRequestActivity>(0)}
+                R.id.menu_home_list -> { Toast.makeText(this, "Already on home page.", Toast.LENGTH_SHORT).show() }
             }
             true
         }
@@ -53,20 +59,26 @@ class RequestListActivity : AppCompatActivity() {
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
-                var list = ArrayList<RequestModel>()
+               // var requestList = ArrayList<RequestModel>()
                 for(data in snapshot.children){
                     var model = data.getValue(RequestModel::class.java)
                     reqKey = data.key!!
                     model!!.reqId = reqKey
-                    list.add(model as RequestModel)
+                    requestList.add(model as RequestModel)
                 }
-                if(list.size > 0){
-                    val adapter = RequestAdapter(list)
+                if(requestList.size > 0){
+                    val adapter = RequestAdapter(requestList, this@RequestListActivity)
                     recyclerView.adapter = adapter
                     //Toast.makeText(applicationContext, reqId, Toast.LENGTH_SHORT).show()
                 }
             }
 
         })
+    }
+
+    override fun onItemClick(position: Int) {
+        Toast.makeText(this, "Request $position clicked", Toast.LENGTH_SHORT).show()
+        val clickedItem: RequestModel = requestList[position]
+        Toast.makeText(this, "RequestId: ${clickedItem.reqId}", Toast.LENGTH_SHORT).show()
     }
 }

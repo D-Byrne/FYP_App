@@ -8,8 +8,9 @@ import kotlinx.android.synthetic.main.recycler_card_view.view.*
 import org.wit.fyp.R
 import org.wit.fyp.models.RequestModel
 
-class RequestAdapter(var list:ArrayList<RequestModel>) : RecyclerView.Adapter<RequestAdapter.ViewHolder>() {
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+class RequestAdapter(var list:ArrayList<RequestModel>, private val listener: OnItemClickListener) : RecyclerView.Adapter<RequestAdapter.ViewHolder>() {
+
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener{
         var title = itemView.list_request_title
         var details = itemView.list_request_details
         var deadline = itemView.list_request_deadline
@@ -17,6 +18,21 @@ class RequestAdapter(var list:ArrayList<RequestModel>) : RecyclerView.Adapter<Re
         var requestName = itemView.list_request_poster_name
         var reqId = itemView.list_request_request_id
 
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            val position = adapterPosition
+            if(position != RecyclerView.NO_POSITION) {
+                listener.onItemClick(position)
+            }
+        }
+
+    }
+
+    interface OnItemClickListener{
+        fun onItemClick(position: Int)
     }
 
 
@@ -35,6 +51,7 @@ class RequestAdapter(var list:ArrayList<RequestModel>) : RecyclerView.Adapter<Re
         holder.location.text = list[position].requestLocation
         holder.requestName.text = "Posted by: " + list[position].authorName
         holder.reqId.text = list[position].reqId
+
     }
 
 }

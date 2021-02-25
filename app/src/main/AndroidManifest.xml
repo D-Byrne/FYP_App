@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FYP">
         <activity android:name=".RequestListActivity"></activity>
-        <activity android:name=".AddRequestActivity" />
+        <activity android:name=".AddRequestActivity"
+            android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>

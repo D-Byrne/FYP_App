@@ -13,6 +13,8 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_add_request.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_request_list.*
+import org.jetbrains.anko.startActivityForResult
 import org.wit.fyp.models.RequestModel
 import java.util.*
 
@@ -71,12 +73,20 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
             }
         }
 
+        request_list_nav_menu_add_request.setOnNavigationItemSelectedListener{
+            when(it.itemId){
+                R.id.menu_cancel_add_request -> { finish() }
+                R.id.menu_home_list_add_request -> {startActivityForResult<RequestListActivity>(0)}
+            }
+            true
+        }
+
         pickDate()
 
 
         getData()
 
-        Toast.makeText(this, userId + username, Toast.LENGTH_SHORT).show()
+       // Toast.makeText(this, userId + username, Toast.LENGTH_SHORT).show()
 
     }
 
