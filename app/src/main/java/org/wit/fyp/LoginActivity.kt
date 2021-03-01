@@ -15,6 +15,12 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        if(FirebaseAuth.getInstance().currentUser != null){
+            startActivity(Intent(this, RequestListActivity::class.java))
+        } else { }
+
+
+
         text_view_register.setOnClickListener{
             startActivity(Intent(this, RegisterActivity::class.java))
         }
