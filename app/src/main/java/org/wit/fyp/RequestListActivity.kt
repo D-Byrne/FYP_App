@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
@@ -39,11 +40,17 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
 
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
-
+        
         request_list_nav_menu.setOnNavigationItemSelectedListener{
             when(it.itemId){
                 R.id.menu_add_request -> {startActivityForResult<AddRequestActivity>(0)}
                 R.id.menu_home_list -> { Toast.makeText(this, "Already on home page.", Toast.LENGTH_SHORT).show() }
+                R.id.menu_logout -> {
+                    FirebaseAuth.getInstance().signOut()
+
+                    startActivity(Intent(this, LoginActivity::class.java))
+                    finish()
+                }
             }
             true
         }
@@ -80,5 +87,7 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
         Toast.makeText(this, "Request $position clicked", Toast.LENGTH_SHORT).show()
         val clickedItem: RequestModel = requestList[position]
         Toast.makeText(this, "RequestId: ${clickedItem.reqId}", Toast.LENGTH_SHORT).show()
+        startActivityForResult(intentFor<ViewRequestActivity>().putExtra("view_request_model", clickedItem), 0)
+
     }
 }

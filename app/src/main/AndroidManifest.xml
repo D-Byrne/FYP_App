@@ -9,9 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FYP">
-        <activity android:name=".RequestListActivity"></activity>
-        <activity android:name=".AddRequestActivity"
-            android:windowSoftInputMode="adjustPan"/>
+        <activity android:name=".ViewRequestActivity"></activity>
+        <activity android:name=".RequestListActivity" />
+        <activity
+            android:name=".AddRequestActivity"
+            android:windowSoftInputMode="adjustPan" />
         <activity android:name=".RegisterActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
