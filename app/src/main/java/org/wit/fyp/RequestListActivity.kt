@@ -66,7 +66,8 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
             }
 
             override fun onDataChange(snapshot: DataSnapshot) {
-               // var requestList = ArrayList<RequestModel>()
+                requestList.clear()
+
                 for(data in snapshot.children){
                     var model = data.getValue(RequestModel::class.java)
                     reqKey = data.key!!

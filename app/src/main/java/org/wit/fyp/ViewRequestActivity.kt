@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -12,8 +13,11 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_add_request.*
+import kotlinx.android.synthetic.main.activity_request_list.*
 import kotlinx.android.synthetic.main.activity_view_request.*
 import kotlinx.android.synthetic.main.activity_view_request.view.*
+import org.wit.fyp.adapters.OfferAdapter
+import org.wit.fyp.adapters.RequestAdapter
 import org.wit.fyp.models.OfferModel
 import org.wit.fyp.models.RequestModel
 
@@ -27,11 +31,16 @@ class ViewRequestActivity : AppCompatActivity() {
 
     var request = RequestModel()
 
+    var offerList = ArrayList<OfferModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_request)
 
         database = Firebase.database.reference
+
+        val layoutManager = LinearLayoutManager(this)
+        recyclerView_offers.layoutManager = layoutManager
 
 
         setRequestFields()
@@ -46,6 +55,8 @@ class ViewRequestActivity : AppCompatActivity() {
             else{ Toast.makeText(this, "Must enter offer.", Toast.LENGTH_SHORT).show()}
         }
 
+        getOffer()
+
 
 
     }
@@ -58,6 +69,36 @@ class ViewRequestActivity : AppCompatActivity() {
         view_request_details.setText(request.requestDetails)
         view_request_deadline.setText("Accepting Offers Until: " + request.requestDeadline)
         view_request_location.setText("Location: " + request.requestLocation)
+
+        //database = Firebase.database.reference.child("requests").child(request.reqId!!).child("offers")
+    }
+
+    private fun getOffer(){
+
+        database = Firebase.database.reference.child("requests").child(request.reqId!!).child("offers")
+
+        database.addValueEventListener(object: ValueEventListener{
+            override fun onCancelled(error: DatabaseError) {
+                Log.e("cancel", error.toString())
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                offerList.clear()
+
+                for(data in snapshot.children){
+                    var model = data.getValue(OfferModel::class.java)
+                    //reqKey = data.key!!
+                    //model!!.reqId = reqKey
+                    offerList.add(model as OfferModel)
+                }
+                if(offerList.size > 0){
+                    val adapter = OfferAdapter(offerList)
+                    recyclerView_offers.adapter = adapter
+                    //Toast.makeText(applicationContext, reqId, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+        })
     }
 
     private fun addOffer(){
@@ -76,6 +117,8 @@ class ViewRequestActivity : AppCompatActivity() {
 
          */
 
+        database = Firebase.database.reference
+
         var authorId = FirebaseAuth.getInstance().currentUser!!.uid
         var authorName = username
         var offerAmount = view_request_offer_field.edit_text_add_offer.text.toString()
@@ -84,6 +127,7 @@ class ViewRequestActivity : AppCompatActivity() {
         var offerModel = OfferModel(authorId, authorName, offerAmount)
 
         database.child("requests").child(request.reqId!!).child("offers").child(id!!).setValue(offerModel)
+
     }
 
     private fun getUserData(){
