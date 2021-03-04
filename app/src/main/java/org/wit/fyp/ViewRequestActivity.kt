@@ -32,6 +32,7 @@ class ViewRequestActivity : AppCompatActivity() {
     var request = RequestModel()
 
     var offerList = ArrayList<OfferModel>()
+    var offerExists: Boolean = false
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,6 +103,12 @@ class ViewRequestActivity : AppCompatActivity() {
 
     private fun addOffer(){
 
+        for(offer in offerList){
+            if(offer.authorId == FirebaseAuth.getInstance().currentUser!!.uid){
+                offerExists = true
+            }
+        }
+
         database = Firebase.database.reference
 
         val authorId = FirebaseAuth.getInstance().currentUser!!.uid
@@ -111,7 +118,11 @@ class ViewRequestActivity : AppCompatActivity() {
 
         val offerModel = OfferModel(authorId, authorName, offerAmount)
 
-        database.child("requests").child(request.reqId!!).child("offers").child(id!!).setValue(offerModel)
+        if(offerExists){
+            Toast.makeText(this, "You have already made an offer", Toast.LENGTH_SHORT).show()
+        } else {
+            database.child("requests").child(request.reqId!!).child("offers").child(id!!).setValue(offerModel)
+        }
 
     }
 
