@@ -32,7 +32,7 @@ class ViewRequestActivity : AppCompatActivity() {
     var request = RequestModel()
 
     var offerList = ArrayList<OfferModel>()
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_view_request)
@@ -49,8 +49,8 @@ class ViewRequestActivity : AppCompatActivity() {
 
         btn_add_offer.setOnClickListener{
             if(edit_text_add_offer.text.toString().trim().isNotEmpty()){
-                addOffer()
-                edit_text_add_offer.setText("")
+                    addOffer()
+                    edit_text_add_offer.setText("")
             }
             else{ Toast.makeText(this, "Must enter offer.", Toast.LENGTH_SHORT).show()}
         }
@@ -86,9 +86,8 @@ class ViewRequestActivity : AppCompatActivity() {
                 offerList.clear()
 
                 for(data in snapshot.children){
-                    var model = data.getValue(OfferModel::class.java)
-                    //reqKey = data.key!!
-                    //model!!.reqId = reqKey
+                    val model = data.getValue(OfferModel::class.java)
+
                     offerList.add(model as OfferModel)
                 }
                 if(offerList.size > 0){
@@ -102,29 +101,15 @@ class ViewRequestActivity : AppCompatActivity() {
     }
 
     private fun addOffer(){
-        /*
-        var title = edit_text_add_request_title.text.toString().trim()
-        var details = edit_text_add_request_details.text.toString().trim()
-        var deadline = deadline_label.text.toString().trim()
-        var location = custom_spinner_item.text.toString().trim()
-        val id = database.push().key
-
-        val userId = FirebaseAuth.getInstance().currentUser!!.uid
-
-        var requestModel = RequestModel(userId, username!!,  title, details, deadline, location)
-
-        database.child("requests").child(id!!).setValue(requestModel)
-
-         */
 
         database = Firebase.database.reference
 
-        var authorId = FirebaseAuth.getInstance().currentUser!!.uid
-        var authorName = username
-        var offerAmount = view_request_offer_field.edit_text_add_offer.text.toString()
+        val authorId = FirebaseAuth.getInstance().currentUser!!.uid
+        val authorName = username
+        val offerAmount = view_request_offer_field.edit_text_add_offer.text.toString()
         val id = database.push().key
 
-        var offerModel = OfferModel(authorId, authorName, offerAmount)
+        val offerModel = OfferModel(authorId, authorName, offerAmount)
 
         database.child("requests").child(request.reqId!!).child("offers").child(id!!).setValue(offerModel)
 
