@@ -8,11 +8,27 @@ import kotlinx.android.synthetic.main.recycler_offer_car_view.view.*
 import org.wit.fyp.R
 import org.wit.fyp.models.OfferModel
 
-class OfferAdapter(var list:ArrayList<OfferModel>) : RecyclerView.Adapter<OfferAdapter.ViewHolder>(){
+class OfferAdapter(var list:ArrayList<OfferModel>, private val listener: OnItemClickListener) : RecyclerView.Adapter<OfferAdapter.ViewHolder>(){
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener{
         var offerName = itemView.list_offers_name
         var offerAmount = itemView.list_offers_amount
+
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            val position = adapterPosition
+            if(position != RecyclerView.NO_POSITION){
+                listener.onItemClick(position)
+            }
+        }
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(position: Int)
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

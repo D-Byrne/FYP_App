@@ -16,12 +16,13 @@ import kotlinx.android.synthetic.main.activity_add_request.*
 import kotlinx.android.synthetic.main.activity_request_list.*
 import kotlinx.android.synthetic.main.activity_view_request.*
 import kotlinx.android.synthetic.main.activity_view_request.view.*
+import org.jetbrains.anko.intentFor
 import org.wit.fyp.adapters.OfferAdapter
 import org.wit.fyp.adapters.RequestAdapter
 import org.wit.fyp.models.OfferModel
 import org.wit.fyp.models.RequestModel
 
-class ViewRequestActivity : AppCompatActivity() {
+class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListener {
 
     private lateinit var database: DatabaseReference
 
@@ -92,7 +93,7 @@ class ViewRequestActivity : AppCompatActivity() {
                     offerList.add(model as OfferModel)
                 }
                 if(offerList.size > 0){
-                    val adapter = OfferAdapter(offerList)
+                    val adapter = OfferAdapter(offerList, this@ViewRequestActivity)
                     recyclerView_offers.adapter = adapter
                     //Toast.makeText(applicationContext, reqId, Toast.LENGTH_SHORT).show()
                 }
@@ -148,4 +149,13 @@ class ViewRequestActivity : AppCompatActivity() {
             }
         })
     }
+
+    override fun onItemClick(position: Int) {
+        Toast.makeText(this, "Offer $position clicked", Toast.LENGTH_SHORT).show()
+        val clickedItem: OfferModel = offerList[position]
+        Toast.makeText(this, "RequestId: ${clickedItem.amount}", Toast.LENGTH_SHORT).show()
+        //startActivityForResult(intentFor<ViewRequestActivity>().putExtra("view_request_model", clickedItem), 0)
+
+    }
+
 }
