@@ -85,9 +85,9 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
     }
 
     override fun onItemClick(position: Int) {
-        Toast.makeText(this, "Request $position clicked", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "Request $position clicked", Toast.LENGTH_SHORT).show()
         val clickedItem: RequestModel = requestList[position]
-        Toast.makeText(this, "RequestId: ${clickedItem.reqId}", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "RequestId: ${clickedItem.reqId}", Toast.LENGTH_SHORT).show()
         startActivityForResult(intentFor<ViewRequestActivity>().putExtra("view_request_model", clickedItem), 0)
 
     }

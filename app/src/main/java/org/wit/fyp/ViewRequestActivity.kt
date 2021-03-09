@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -34,6 +35,7 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
     var offerList = ArrayList<OfferModel>()
     var offerExists: Boolean = false
+    var ownRequest: Boolean = false
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,6 +112,10 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
             }
         }
 
+        if(FirebaseAuth.getInstance().currentUser!!.uid == request.authorId){
+            ownRequest = true
+        }
+
         database = Firebase.database.reference
 
         val authorId = FirebaseAuth.getInstance().currentUser!!.uid
@@ -121,6 +127,10 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
         if(offerExists){
             Toast.makeText(this, "You have already made an offer", Toast.LENGTH_SHORT).show()
+        } else if(ownRequest){
+            //btn_add_offer.isVisible = false
+            //view_request_offer_field.isVisible = false
+            Toast.makeText(this, "Can't post offer on own request.", Toast.LENGTH_SHORT).show()
         } else {
             database.child("requests").child(request.reqId!!).child("offers").child(id!!).setValue(offerModel)
         }
@@ -151,9 +161,16 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
     }
 
     override fun onItemClick(position: Int) {
+
         Toast.makeText(this, "Offer $position clicked", Toast.LENGTH_SHORT).show()
         val clickedItem: OfferModel = offerList[position]
-        Toast.makeText(this, "RequestId: ${clickedItem.amount}", Toast.LENGTH_SHORT).show()
+        //Toast.makeText(this, "RequestId: ${clickedItem.amount}", Toast.LENGTH_SHORT).show()
+        if(FirebaseAuth.getInstance().currentUser!!.uid == request.authorId){
+            Toast.makeText(this, "Allowed to proceed to Accept or Cancel offer.", Toast.LENGTH_SHORT).show()
+        } else{
+            Toast.makeText(this, "Not Allowed to proceed.", Toast.LENGTH_SHORT).show()
+        }
+
         //startActivityForResult(intentFor<ViewRequestActivity>().putExtra("view_request_model", clickedItem), 0)
 
     }
