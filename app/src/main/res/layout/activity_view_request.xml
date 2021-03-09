@@ -17,6 +17,7 @@
             android:id="@+id/view_request_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_above="@id/nav_menu_view_request"
             android:fillViewport="false">
 
             <LinearLayout
@@ -149,6 +150,20 @@
 
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/view_request_offer_status_tv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:text="No Offer Accepted"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="10dp"/>
+
+
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView_offers"
                     android:layout_width="match_parent"
@@ -160,6 +175,17 @@
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/nav_menu_view_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:attr/windowBackground"
+            app:itemBackground="@color/red_gradient_two"
+            app:itemIconTint="@color/white"
+            app:itemTextColor="@color/white"
+            android:layout_alignParentBottom="true"
+            app:menu="@menu/menu_view_request"/>
 
     </RelativeLayout>
 

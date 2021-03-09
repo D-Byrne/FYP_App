@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_request_list.*
 import kotlinx.android.synthetic.main.activity_view_request.*
 import kotlinx.android.synthetic.main.activity_view_request.view.*
 import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.startActivityForResult
 import org.wit.fyp.adapters.OfferAdapter
 import org.wit.fyp.adapters.RequestAdapter
 import org.wit.fyp.models.OfferModel
@@ -30,12 +31,17 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
     var username = ""
     var firstName: String = ""
     var lastName: String = ""
+    var email: String = ""
+    var offerKey: String = ""
 
     var request = RequestModel()
 
     var offerList = ArrayList<OfferModel>()
     var offerExists: Boolean = false
     var ownRequest: Boolean = false
+
+    var offerAccept: Boolean = false
+    var currentlyAcceptedId: String = ""
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +52,13 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
         val layoutManager = LinearLayoutManager(this)
         recyclerView_offers.layoutManager = layoutManager
 
+        nav_menu_view_request.setOnNavigationItemSelectedListener{
+            when(it.itemId){
+                R.id.menu_view_request_cancel -> { finish() }
+                R.id.menu_view_request_home -> {startActivityForResult<RequestListActivity>(0)}
+            }
+            true
+        }
 
         setRequestFields()
 
@@ -53,6 +66,7 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
         btn_add_offer.setOnClickListener{
             if(edit_text_add_offer.text.toString().trim().isNotEmpty()){
+                Toast.makeText(this, "Value: " + offerAccept, Toast.LENGTH_SHORT).show()
                     addOffer()
                     edit_text_add_offer.setText("")
             }
@@ -60,8 +74,6 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
         }
 
         getOffer()
-
-
 
     }
 
@@ -91,17 +103,20 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
                 for(data in snapshot.children){
                     val model = data.getValue(OfferModel::class.java)
-
+                    offerKey = data.key!!
+                    model!!.offerId = offerKey
                     offerList.add(model as OfferModel)
                 }
                 if(offerList.size > 0){
                     val adapter = OfferAdapter(offerList, this@ViewRequestActivity)
                     recyclerView_offers.adapter = adapter
-                    //Toast.makeText(applicationContext, reqId, Toast.LENGTH_SHORT).show()
+                    checkOffer()
+
                 }
             }
 
         })
+
     }
 
     private fun addOffer(){
@@ -138,6 +153,7 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
     }
 
     private fun getUserData(){
+
         database.child("users").child(FirebaseAuth.getInstance().currentUser!!.uid).addValueEventListener(object:
             ValueEventListener {
             override fun onCancelled(error: DatabaseError){
@@ -150,6 +166,7 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
                     firstName = dataSnapshot.child("firstName").getValue(String::class.java)!!
                     lastName = dataSnapshot.child("lastName").getValue(String::class.java)!!
+                    email = dataSnapshot.child("userEmail").getValue(String::class.java)!!
 
                     username = firstName + " " + lastName
 
@@ -162,17 +179,40 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
     override fun onItemClick(position: Int) {
 
-        Toast.makeText(this, "Offer $position clicked", Toast.LENGTH_SHORT).show()
+       checkOffer()
+
+        //Toast.makeText(this, "Offer $position clicked", Toast.LENGTH_SHORT).show()
         val clickedItem: OfferModel = offerList[position]
-        //Toast.makeText(this, "RequestId: ${clickedItem.amount}", Toast.LENGTH_SHORT).show()
+       // Toast.makeText(this, "RequestId: ${clickedItem.offerAccepted}", Toast.LENGTH_SHORT).show()
         if(FirebaseAuth.getInstance().currentUser!!.uid == request.authorId){
-            Toast.makeText(this, "Allowed to proceed to Accept or Cancel offer.", Toast.LENGTH_SHORT).show()
+          //  Toast.makeText(this, "Allowed to proceed to Accept or Cancel offer.", Toast.LENGTH_SHORT).show()
+            if(offerAccept && (clickedItem.offerId!! == currentlyAcceptedId)) {
+
+                startActivityForResult(intentFor<ViewOfferActivity>().putExtra("view_offer", clickedItem).putExtra("request", request).putExtra("user_email", email).putExtra("offer_accepted", offerAccept), 0)
+
+            } else if(offerAccept && (clickedItem.offerId!! != currentlyAcceptedId)){
+                Toast.makeText(this, "Only one offer can be accepted at a time.", Toast.LENGTH_SHORT).show()
+            } else if (!offerAccept){
+                startActivityForResult(intentFor<ViewOfferActivity>().putExtra("view_offer", clickedItem).putExtra("request", request).putExtra("user_email", email).putExtra("offer_accepted", offerAccept), 0)
+               // Toast.makeText(this," " + currentlyAcceptedId + " " +clickedItem.offerId, Toast.LENGTH_SHORT).show()
+            }
+
         } else{
             Toast.makeText(this, "Not Allowed to proceed.", Toast.LENGTH_SHORT).show()
         }
 
-        //startActivityForResult(intentFor<ViewRequestActivity>().putExtra("view_request_model", clickedItem), 0)
+    }
 
+    fun checkOffer(){
+        for (offer in offerList){
+                if(offer.offerAccepted == true) {
+                    // Toast.makeText(this, offer.authorName + offer.amount + offer.offerAccepted, Toast.LENGTH_SHORT).show()
+                    offerAccept = true
+                    currentlyAcceptedId = offer.offerId!!
+                    view_request_offer_status_tv.setText("Offer Accepted")
+                }
+
+        }
     }
 
 }

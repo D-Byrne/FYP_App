@@ -21,14 +21,14 @@
             android:layout_alignParentBottom="true"
             app:menu="@menu/menu_main"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scrollbars="vertical"
-        android:layout_above="@+id/request_list_nav_menu"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/request_list_nav_menu"
+            android:layout_marginBottom="2dp"
+            android:scrollbars="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
 
     </RelativeLayout>

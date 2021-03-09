@@ -21,13 +21,14 @@ class RegisterActivity : AppCompatActivity() {
     var firstName: String = ""
     var lastName: String = ""
     var phoneNumber: String = ""
+    var userEmail: String = ""
     var customKey: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        FirebaseDatabase.getInstance().setLogLevel(Logger.Level.DEBUG)
+       // FirebaseDatabase.getInstance().setLogLevel(Logger.Level.DEBUG)
 
         database = Firebase.database.reference
 
@@ -92,8 +93,9 @@ class RegisterActivity : AppCompatActivity() {
         firstName = edit_text_register_first_name.text.toString().trim()
         lastName = edit_text_register_last_name.text.toString().trim()
         phoneNumber = edit_text_register_phone.text.toString().trim()
+        userEmail = edit_text_register_email.text.toString().trim()
 
-        var userModel = UserModel(firstName, lastName, phoneNumber)
+        var userModel = UserModel(firstName, lastName, phoneNumber, userEmail)
 
         database.child("users").child(customKey).setValue(userModel)
     }

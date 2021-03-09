@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ViewOfferActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/view_offer_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="25sp"
+                android:text="David's Offer"
+                android:gravity="center"
+                android:layout_marginTop="40dp"/>
+
+            <TextView
+                android:id="@+id/view_offer_amount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:textSize="20sp"
+                android:text="250"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/view_offer_author_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:textSize="20sp"
+                android:text="Email: testone@mail.com"
+                android:visibility="gone"
+                android:gravity="center"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#808080"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="0dp"/>
+
+            <Button
+                android:id="@+id/btn_accept_offer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:foreground="?attr/selectableItemBackground"
+                android:background="@color/red_gradient_two"
+                android:text="Accept Offer" />
+
+            <Button
+                android:id="@+id/btn_cancel_offer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:foreground="?attr/selectableItemBackground"
+                android:background="@color/red_gradient_two"
+                android:visibility="gone"
+                android:text="Cancel" />
+
+
+        </LinearLayout>
+
+
+
+
+
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
