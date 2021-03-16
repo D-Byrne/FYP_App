@@ -12,9 +12,27 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/toolbar_parent_view_offer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/red_gradient_two"
+            android:fitsSystemWindows="true"
+            android:elevation="0dip"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_view_offer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:titleTextColor="@color/white"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/toolbar_parent_view_offer"
             android:orientation="vertical">
 
             <TextView

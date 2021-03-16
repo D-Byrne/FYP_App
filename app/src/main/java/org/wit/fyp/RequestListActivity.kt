@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -14,6 +16,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_request_list.*
+import kotlinx.android.synthetic.main.activity_view_offer.*
 import org.wit.fyp.adapters.RequestAdapter
 import org.wit.fyp.models.RequestModel
 import org.jetbrains.anko.startActivityForResult
@@ -40,23 +43,43 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
 
         val layoutManager = LinearLayoutManager(this)
         recyclerView.layoutManager = layoutManager
+
+        toolbar_view_request_list.title = title
+        setSupportActionBar(toolbar_view_request_list)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        supportActionBar?.setDisplayShowHomeEnabled(false)
+        toolbar_view_request_list.title = "Home"
         
         request_list_nav_menu.setOnNavigationItemSelectedListener{
             when(it.itemId){
+
                 R.id.menu_add_request -> {startActivityForResult<AddRequestActivity>(0)}
                 R.id.menu_home_list -> { Toast.makeText(this, "Already on home page.", Toast.LENGTH_SHORT).show() }
                 R.id.menu_view_user_requests -> {startActivityForResult<UserRequestList>(0)}
-                R.id.menu_logout -> {
-                    FirebaseAuth.getInstance().signOut()
 
-                    startActivity(Intent(this, LoginActivity::class.java))
-                    finish()
-                }
             }
             true
         }
 
         getRequest()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_top_view_list_requests, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.menu_logout -> { FirebaseAuth.getInstance().signOut()
+                                  startActivity(Intent(this, LoginActivity::class.java))
+                                  finish()}
+
+            //android.R.id.home -> { finish() }
+
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun getRequest(){

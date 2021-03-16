@@ -12,10 +12,27 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/toolbar_parent_add_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/red_gradient_two"
+            android:fitsSystemWindows="true"
+            android:elevation="0dip"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_add"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleTextColor="@color/white"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/request_list_nav_menu_add_request"
+            android:layout_below="@+id/toolbar_parent_add_request"
             android:fillViewport="true">
 
             <LinearLayout
@@ -113,6 +130,20 @@
                     android:background="@color/red_gradient_two"
                     android:text="Add Request" />
 
+                <Button
+                    android:id="@+id/btn_edit_request"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:visibility="gone"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:background="@color/red_gradient_two"
+                    android:text="Save" />
+
                 <TextView
                     android:id="@+id/custom_spinner_item"
                     android:layout_width="match_parent"
@@ -132,16 +163,7 @@
 
         </ScrollView>
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/request_list_nav_menu_add_request"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground"
-            app:itemBackground="@color/red_gradient_two"
-            app:itemIconTint="@color/white"
-            app:itemTextColor="@color/white"
-            android:layout_alignParentBottom="true"
-            app:menu="@menu/menu_add_request"/>
+
 
     </RelativeLayout>
 

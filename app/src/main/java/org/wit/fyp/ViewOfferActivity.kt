@@ -3,6 +3,8 @@ package org.wit.fyp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.view.isVisible
 import com.google.firebase.auth.FirebaseAuth
@@ -32,6 +34,12 @@ class ViewOfferActivity : AppCompatActivity() {
         setContentView(R.layout.activity_view_offer)
 
         database = Firebase.database.reference
+
+        toolbar_view_offer.title = title
+        setSupportActionBar(toolbar_view_offer)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         setFromIntent()
 
@@ -67,7 +75,19 @@ class ViewOfferActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_top_view_offer, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+
+            android.R.id.home -> { finish() }
+
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     private fun acceptOffer(){
         database.child("requests/${request.reqId}/offers/${offer.offerId}/offerAccepted").setValue(true)
@@ -85,6 +105,8 @@ class ViewOfferActivity : AppCompatActivity() {
         userEmail = intent.extras?.getString("user_email")!!
 
         offerAccept = intent.extras?.getBoolean("offer_accepted")!!
+
+        toolbar_view_offer.title = offer.authorName + "'s Offer"
 
         Toast.makeText(this, "Value: " + offerAccept, Toast.LENGTH_SHORT).show()
 

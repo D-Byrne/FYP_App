@@ -5,8 +5,11 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
+import androidx.core.view.isVisible
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.ktx.database
@@ -14,6 +17,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_add_request.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.activity_request_list.*
+import kotlinx.android.synthetic.main.activity_user_request_list.*
 import org.jetbrains.anko.startActivityForResult
 import org.wit.fyp.models.RequestModel
 import java.util.*
@@ -21,6 +25,7 @@ import java.util.*
 class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListener {
 
     private lateinit var database: DatabaseReference
+    var editRequest = RequestModel()
 
     var day = 0
     var month = 0
@@ -35,12 +40,20 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
     var firstName: String = ""
     var lastName: String = ""
 
+    var edit = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_request)
 
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
+
+        toolbar_add.title = "Create Request"
+        setSupportActionBar(toolbar_add)
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         val countyNames = arrayOf("Request Location", "---------------------","Carlow", "Cavan", "Clare", "Cork", "Donegal", "Dublin", "Galway", "Kerry", "Kildare", "Kilkenny",
                                                                               "Laois", "Leitrim", "Limerick", "Longford", "Louth", "Mayo", "Meath", "Monaghan", "Offaly", "Roscommon",
@@ -63,6 +76,38 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
 
         database = Firebase.database.reference
 
+        if(intent.hasExtra("edit_request")) {
+            edit = true
+
+            toolbar_add.title = "Edit Request"
+
+            btn_add_request.isVisible = false
+            btn_edit_request.isVisible = true
+
+            editRequest = intent.extras?.getParcelable<RequestModel>("edit_request")!!
+
+            edit_text_add_request_title.setText(editRequest.requestTitle)
+            edit_text_add_request_details.setText(editRequest.requestDetails)
+            deadline_label.setText(editRequest.requestDeadline)
+            spinner_select_location.setSelection(arrayAdapter.getPosition(editRequest.requestLocation))
+
+
+        }
+
+        btn_edit_request.setOnClickListener{
+            val locationSpin = spinner_select_location.selectedItem.toString().trim()
+            Toast.makeText(this, "Location: $locationSpin", Toast.LENGTH_SHORT).show()
+
+            if( (edit_text_add_request_title.text.toString().trim().isNotEmpty()) && (edit_text_add_request_details.text.toString().trim().isNotEmpty()) && (deadline_label.text.toString().trim() != "DD - MM - YYYY") && ((locationSpin != "Request Location") || (locationSpin != "---------------------"))){
+               // writeToDatabase()
+                updateRequest()
+                startActivity(Intent(this, UserRequestList::class.java))
+                finish()
+            }else{
+                Toast.makeText(this, "All fields must be entered or selected.", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         btn_add_request.setOnClickListener{
             if( (edit_text_add_request_title.text.toString().trim().isNotEmpty()) && (edit_text_add_request_details.text.toString().trim().isNotEmpty()) && (deadline_label.text.toString().trim() != "DD - MM - YYYY") && ((custom_spinner_item.text.toString().trim() != "Request Location") || (custom_spinner_item.text.toString().trim() != "---------------------"))){
                 writeToDatabase()
@@ -73,15 +118,6 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
             }
         }
 
-        request_list_nav_menu_add_request.setOnNavigationItemSelectedListener{
-            when(it.itemId){
-                R.id.menu_cancel_add_request -> { finish() }
-                R.id.menu_view_user_requests_add_request -> {startActivityForResult<UserRequestList>(0)}
-                R.id.menu_home_list_add_request -> {startActivityForResult<RequestListActivity>(0)}
-            }
-            true
-        }
-
         pickDate()
 
 
@@ -89,6 +125,20 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
 
        // Toast.makeText(this, userId + username, Toast.LENGTH_SHORT).show()
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_top_add_request, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+
+            android.R.id.home -> { finish() }
+
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     private fun getDateCalendar() {
@@ -114,6 +164,25 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
 
         getDateCalendar()
         deadline_label.text = "$savedDay/$savedMonth/$savedYear"
+
+    }
+
+    fun updateRequest(){
+
+        var newTitle = edit_text_add_request_title.text.toString().trim()
+        var newDetails = edit_text_add_request_details.text.toString().trim()
+        var newDeadline = deadline_label.text.toString().trim()
+        var newLocation = spinner_select_location.selectedItem.toString().trim()
+
+        //var saveRequest = RequestModel(editRequest.authorId, editRequest.authorName, newTitle, newDetails, newDeadline, newLocation)
+
+        database.child("requests").child(editRequest.reqId!!).child("requestTitle").setValue(newTitle)
+        database.child("requests").child(editRequest.reqId!!).child("requestDetails").setValue(newDetails)
+        database.child("requests").child(editRequest.reqId!!).child("requestDeadline").setValue(newDeadline)
+        database.child("requests").child(editRequest.reqId!!).child("requestLocation").setValue(newLocation)
+
+
+
 
     }
 

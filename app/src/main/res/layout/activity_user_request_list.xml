@@ -17,7 +17,7 @@
             android:background="@color/red_gradient_two"
             android:fitsSystemWindows="true"
             android:elevation="0dip"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar">
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"

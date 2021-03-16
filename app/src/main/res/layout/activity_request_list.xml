@@ -10,6 +10,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/toolbar_request_list_parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/red_gradient_two"
+            android:fitsSystemWindows="true"
+            android:elevation="0dip"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_view_request_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleTextColor="@color/white"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/request_list_nav_menu"
             android:layout_width="match_parent"
@@ -26,6 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/request_list_nav_menu"
+            android:layout_below="@+id/toolbar_request_list_parent"
             android:layout_marginBottom="2dp"
             android:scrollbars="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />

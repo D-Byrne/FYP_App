@@ -13,11 +13,28 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/toolbar_parent_view_request"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/red_gradient_two"
+            android:fitsSystemWindows="true"
+            android:elevation="0dip"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_view_request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:titleTextColor="@color/white"/>
+
+        </com.google.android.material.appbar.AppBarLayout>
+
         <androidx.core.widget.NestedScrollView
             android:id="@+id/view_request_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/nav_menu_view_request"
+            android:layout_below="@+id/toolbar_parent_view_request"
             android:fillViewport="false">
 
             <LinearLayout
@@ -175,17 +192,6 @@
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
-
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/nav_menu_view_request"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?android:attr/windowBackground"
-            app:itemBackground="@color/red_gradient_two"
-            app:itemIconTint="@color/white"
-            app:itemTextColor="@color/white"
-            android:layout_alignParentBottom="true"
-            app:menu="@menu/menu_view_request"/>
 
     </RelativeLayout>
 

@@ -3,6 +3,8 @@ package org.wit.fyp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +17,7 @@ import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_add_request.*
 import kotlinx.android.synthetic.main.activity_request_list.*
+import kotlinx.android.synthetic.main.activity_user_request_list.*
 import kotlinx.android.synthetic.main.activity_view_request.*
 import kotlinx.android.synthetic.main.activity_view_request.view.*
 import org.jetbrains.anko.intentFor
@@ -52,13 +55,11 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
         val layoutManager = LinearLayoutManager(this)
         recyclerView_offers.layoutManager = layoutManager
 
-        nav_menu_view_request.setOnNavigationItemSelectedListener{
-            when(it.itemId){
-                R.id.menu_view_request_cancel -> { finish() }
-                R.id.menu_view_request_home -> {startActivityForResult<RequestListActivity>(0)}
-            }
-            true
-        }
+        toolbar_view_request.title = title
+        setSupportActionBar(toolbar_view_request)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         setRequestFields()
 
@@ -76,6 +77,20 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_top_view_request, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+
+            android.R.id.home -> { finish() }
+
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     fun setRequestFields(){
         request = intent.extras?.getParcelable<RequestModel>("view_request_model")!!
 
@@ -84,6 +99,8 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
         view_request_details.setText(request.requestDetails)
         view_request_deadline.setText("Accepting Offers Until: " + request.requestDeadline)
         view_request_location.setText("Location: " + request.requestLocation)
+
+        toolbar_view_request.title = request.authorName + "'s Request"
 
         //database = Firebase.database.reference.child("requests").child(request.reqId!!).child("offers")
     }

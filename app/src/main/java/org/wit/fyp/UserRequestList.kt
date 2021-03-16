@@ -38,6 +38,10 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
         toolbar.title = title
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+        supportActionBar?.setDisplayHomeAsUpEnabled(false)
+        supportActionBar?.setDisplayShowHomeEnabled(false)
+        toolbar.title = "User Requests"
+
 
         val layoutManager = LinearLayoutManager(this)
         recyclerViewPerUser.layoutManager = layoutManager
@@ -48,6 +52,7 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                 R.id.menu_user_view_request_user_requests -> { Toast.makeText(this, "Already viewing user requests", Toast.LENGTH_SHORT).show() }
                 R.id.menu_user_view_request_add_request -> { startActivityForResult<AddRequestActivity>(0) }
                 R.id.menu_user_view_request_home -> { startActivityForResult<RequestListActivity>(0) }
+                android.R.id.home -> { Toast.makeText(this, "Back again.", Toast.LENGTH_SHORT).show() }
             }
 
         }
@@ -61,18 +66,25 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
         if(isEdit || isDelete) menu!!.getItem(0).setVisible(true)
         if(isEdit) menu!!.getItem(2).setVisible(false)
         if(isDelete) menu!!.getItem(1).setVisible(false)
+
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.menu_top_delete -> { isDelete = true
+                                      toolbar.title = "Delete Request"
                                       invalidateOptionsMenu()}
             R.id.menu_top_edit -> { isEdit = true
+                                    toolbar.title = "Edit Request"
                                     invalidateOptionsMenu()}
             R.id.menu_top_done -> { isEdit = false
                                     isDelete =false
+                                    toolbar.title = "User Requests"
                                     invalidateOptionsMenu()}
+
+            //android.R.id.home -> { Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show() }
+
         }
         return super.onOptionsItemSelected(item)
     }
@@ -109,11 +121,17 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
         //Toast.makeText(this, "Request $position clicked", Toast.LENGTH_SHORT).show()
         val clickedItem: RequestModel = requestList[position]
 
-        if(isEdit) Toast.makeText(this, "Editing", Toast.LENGTH_SHORT).show()
-        if(isDelete){
+        if(isEdit) {
+            Toast.makeText(this, "Editing", Toast.LENGTH_SHORT).show()
+
+            startActivityForResult(intentFor<AddRequestActivity>().putExtra("edit_request", clickedItem), 0)
+        }else if(isDelete){
             Toast.makeText(this, "Delete", Toast.LENGTH_SHORT).show()
 
             database.child(clickedItem.reqId!!).removeValue()
+        }
+        else{
+            startActivityForResult(intentFor<ViewRequestActivity>().putExtra("view_request_model", clickedItem), 0)
         }
         //Toast.makeText(this, "RequestId: ${clickedItem.reqId}", Toast.LENGTH_SHORT).show()
         //startActivityForResult(intentFor<ViewRequestActivity>().putExtra("view_request_model", clickedItem), 0)
