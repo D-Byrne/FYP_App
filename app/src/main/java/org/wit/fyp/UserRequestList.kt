@@ -1,6 +1,5 @@
 package org.wit.fyp
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -14,54 +13,44 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_request_list.*
+import kotlinx.android.synthetic.main.activity_user_request_list.*
+import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.startActivityForResult
 import org.wit.fyp.adapters.RequestAdapter
 import org.wit.fyp.models.RequestModel
-import org.jetbrains.anko.startActivityForResult
-import org.jetbrains.anko.intentFor
-import org.jetbrains.anko.longToast
-import org.jetbrains.anko.toast
 
+class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener {
 
-class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListener {
-
-    private lateinit var database: DatabaseReference
-
-    var reqKey: String = ""
-
+    private lateinit var database : DatabaseReference
     var requestList = ArrayList<RequestModel>()
-   // var adapter = RequestAdapter(requestList, this)
-
+    var reqKey: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_request_list)
+        setContentView(R.layout.activity_user_request_list)
 
         database = Firebase.database.reference.child("requests")
 
         val layoutManager = LinearLayoutManager(this)
-        recyclerView.layoutManager = layoutManager
-        
-        request_list_nav_menu.setOnNavigationItemSelectedListener{
-            when(it.itemId){
-                R.id.menu_add_request -> {startActivityForResult<AddRequestActivity>(0)}
-                R.id.menu_home_list -> { Toast.makeText(this, "Already on home page.", Toast.LENGTH_SHORT).show() }
-                R.id.menu_view_user_requests -> {startActivityForResult<UserRequestList>(0)}
-                R.id.menu_logout -> {
-                    FirebaseAuth.getInstance().signOut()
+        recyclerViewPerUser.layoutManager = layoutManager
 
-                    startActivity(Intent(this, LoginActivity::class.java))
-                    finish()
-                }
+        user_request_list_nav_menu.setOnNavigationItemReselectedListener {
+
+            when(it.itemId) {
+                R.id.menu_user_view_request_user_requests -> { Toast.makeText(this, "Already viewing user requests", Toast.LENGTH_SHORT).show() }
+                R.id.menu_user_view_request_add_request -> { startActivityForResult<AddRequestActivity>(0) }
+                R.id.menu_user_view_request_home -> { startActivityForResult<RequestListActivity>(0) }
             }
-            true
+
         }
 
-        getRequest()
+        getRequests()
+
     }
 
-    private fun getRequest(){
+    fun getRequests(){
 
-        database.addValueEventListener(object: ValueEventListener{
+        database.addValueEventListener(object: ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 Log.e("cancel", error.toString())
             }
@@ -73,11 +62,13 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
                     var model = data.getValue(RequestModel::class.java)
                     reqKey = data.key!!
                     model!!.reqId = reqKey
-                    requestList.add(model as RequestModel)
+                    if(model.authorId == FirebaseAuth.getInstance().currentUser!!.uid) {
+                        requestList.add(model as RequestModel)
+                    }
                 }
                 if(requestList.size > 0){
-                    val adapter = RequestAdapter(requestList, this@RequestListActivity)
-                    recyclerView.adapter = adapter
+                    val adapter = RequestAdapter(requestList, this@UserRequestList)
+                    recyclerViewPerUser.adapter = adapter
                     //Toast.makeText(applicationContext, reqId, Toast.LENGTH_SHORT).show()
                 }
             }
@@ -88,8 +79,8 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
     override fun onItemClick(position: Int) {
         //Toast.makeText(this, "Request $position clicked", Toast.LENGTH_SHORT).show()
         val clickedItem: RequestModel = requestList[position]
-        //Toast.makeText(this, "RequestId: ${clickedItem.reqId}", Toast.LENGTH_SHORT).show()
-        startActivityForResult(intentFor<ViewRequestActivity>().putExtra("view_request_model", clickedItem), 0)
+        Toast.makeText(this, "RequestId: ${clickedItem.reqId}", Toast.LENGTH_SHORT).show()
+        //startActivityForResult(intentFor<ViewRequestActivity>().putExtra("view_request_model", clickedItem), 0)
 
     }
 }

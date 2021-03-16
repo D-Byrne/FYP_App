@@ -66,7 +66,6 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
         btn_add_offer.setOnClickListener{
             if(edit_text_add_offer.text.toString().trim().isNotEmpty()){
-                Toast.makeText(this, "Value: " + offerAccept, Toast.LENGTH_SHORT).show()
                     addOffer()
                     edit_text_add_offer.setText("")
             }

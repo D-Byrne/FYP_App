@@ -76,6 +76,7 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
         request_list_nav_menu_add_request.setOnNavigationItemSelectedListener{
             when(it.itemId){
                 R.id.menu_cancel_add_request -> { finish() }
+                R.id.menu_view_user_requests_add_request -> {startActivityForResult<UserRequestList>(0)}
                 R.id.menu_home_list_add_request -> {startActivityForResult<RequestListActivity>(0)}
             }
             true
