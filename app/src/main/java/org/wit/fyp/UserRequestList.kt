@@ -3,6 +3,8 @@ package org.wit.fyp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -24,12 +26,18 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
     private lateinit var database : DatabaseReference
     var requestList = ArrayList<RequestModel>()
     var reqKey: String = ""
+    var isEdit: Boolean = false
+    var isDelete: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_request_list)
 
         database = Firebase.database.reference.child("requests")
+
+        toolbar.title = title
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
 
         val layoutManager = LinearLayoutManager(this)
         recyclerViewPerUser.layoutManager = layoutManager
@@ -46,6 +54,27 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
 
         getRequests()
 
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_top_main, menu)
+        if(isEdit || isDelete) menu!!.getItem(0).setVisible(true)
+        if(isEdit) menu!!.getItem(2).setVisible(false)
+        if(isDelete) menu!!.getItem(1).setVisible(false)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.menu_top_delete -> { isDelete = true
+                                      invalidateOptionsMenu()}
+            R.id.menu_top_edit -> { isEdit = true
+                                    invalidateOptionsMenu()}
+            R.id.menu_top_done -> { isEdit = false
+                                    isDelete =false
+                                    invalidateOptionsMenu()}
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     fun getRequests(){
@@ -79,7 +108,14 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
     override fun onItemClick(position: Int) {
         //Toast.makeText(this, "Request $position clicked", Toast.LENGTH_SHORT).show()
         val clickedItem: RequestModel = requestList[position]
-        Toast.makeText(this, "RequestId: ${clickedItem.reqId}", Toast.LENGTH_SHORT).show()
+
+        if(isEdit) Toast.makeText(this, "Editing", Toast.LENGTH_SHORT).show()
+        if(isDelete){
+            Toast.makeText(this, "Delete", Toast.LENGTH_SHORT).show()
+
+            database.child(clickedItem.reqId!!).removeValue()
+        }
+        //Toast.makeText(this, "RequestId: ${clickedItem.reqId}", Toast.LENGTH_SHORT).show()
         //startActivityForResult(intentFor<ViewRequestActivity>().putExtra("view_request_model", clickedItem), 0)
 
     }
