@@ -96,9 +96,10 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
 
         btn_edit_request.setOnClickListener{
             val locationSpin = spinner_select_location.selectedItem.toString().trim()
-            Toast.makeText(this, "Location: $locationSpin", Toast.LENGTH_SHORT).show()
+            val checkList = countyNames.copyOfRange(2, 28)
+            //Toast.makeText(this, "Location: $locationSpin", Toast.LENGTH_SHORT).show()
 
-            if( (edit_text_add_request_title.text.toString().trim().isNotEmpty()) && (edit_text_add_request_details.text.toString().trim().isNotEmpty()) && (deadline_label.text.toString().trim() != "DD - MM - YYYY") && ((locationSpin != "Request Location") || (locationSpin != "---------------------"))){
+            if( (edit_text_add_request_title.text.toString().trim().isNotEmpty()) && (edit_text_add_request_details.text.toString().trim().isNotEmpty()) && (deadline_label.text.toString().trim() != "DD - MM - YYYY") && ((checkList.contains(locationSpin) ) || (checkList.contains(locationSpin) ))){
                // writeToDatabase()
                 updateRequest()
                 startActivity(Intent(this, UserRequestList::class.java))
@@ -109,7 +110,10 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
         }
 
         btn_add_request.setOnClickListener{
-            if( (edit_text_add_request_title.text.toString().trim().isNotEmpty()) && (edit_text_add_request_details.text.toString().trim().isNotEmpty()) && (deadline_label.text.toString().trim() != "DD - MM - YYYY") && ((custom_spinner_item.text.toString().trim() != "Request Location") || (custom_spinner_item.text.toString().trim() != "---------------------"))){
+            val locationSpin = spinner_select_location.selectedItem.toString().trim()
+            val checkList = countyNames.copyOfRange(2, 28)
+
+            if( (edit_text_add_request_title.text.toString().trim().isNotEmpty()) && (edit_text_add_request_details.text.toString().trim().isNotEmpty()) && (deadline_label.text.toString().trim() != "DD - MM - YYYY") && ((checkList.contains(locationSpin) ) || (checkList.contains(locationSpin) ))){
                 writeToDatabase()
                 startActivity(Intent(this, RequestListActivity::class.java))
                 finish()

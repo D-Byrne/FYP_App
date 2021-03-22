@@ -23,6 +23,7 @@ import org.jetbrains.anko.startActivityForResult
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
+import org.wit.fyp.models.UserModel
 
 
 class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListener {
@@ -32,6 +33,8 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
     var reqKey: String = ""
 
     var requestList = ArrayList<RequestModel>()
+
+    var currentUser = UserModel()
    // var adapter = RequestAdapter(requestList, this)
 
 

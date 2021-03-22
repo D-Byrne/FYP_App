@@ -46,7 +46,7 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
         val layoutManager = LinearLayoutManager(this)
         recyclerViewPerUser.layoutManager = layoutManager
 
-        user_request_list_nav_menu.setOnNavigationItemReselectedListener {
+        user_request_list_nav_menu.setOnNavigationItemSelectedListener {
 
             when(it.itemId) {
                 R.id.menu_user_view_request_user_requests -> { Toast.makeText(this, "Already viewing user requests", Toast.LENGTH_SHORT).show() }
@@ -54,7 +54,7 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                 R.id.menu_user_view_request_home -> { startActivityForResult<RequestListActivity>(0) }
                 android.R.id.home -> { Toast.makeText(this, "Back again.", Toast.LENGTH_SHORT).show() }
             }
-
+            true
         }
 
         getRequests()

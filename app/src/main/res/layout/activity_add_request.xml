@@ -57,6 +57,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
+                        android:textColor="@color/black"
                         tools:text="Move Some Stuff For Me" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -77,6 +78,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text|textMultiLine"
+                        android:textColor="@color/black"
                         android:scrollHorizontally="false"
                         tools:text="Move Some Stuff For Me" />
 
@@ -104,6 +106,7 @@
                     android:layout_marginTop="15dp"
                     android:textSize="18sp"
                     android:text="DD - MM - YYYY"
+                    android:textColor="@color/black"
                     android:gravity="center" />
 
                 <Spinner

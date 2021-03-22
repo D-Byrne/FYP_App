@@ -24,7 +24,8 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:text="Offer By: Test One"/>
+                android:text="Offer By: Test One"
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/list_offers_amount"
@@ -32,7 +33,8 @@
                 android:layout_height="wrap_content"
                 android:textSize="18sp"
                 android:gravity="center"
-                android:text="500"/>
+                android:text="500"
+                android:textColor="@color/black"/>
 
 
         </LinearLayout>
