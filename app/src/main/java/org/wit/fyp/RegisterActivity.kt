@@ -42,6 +42,10 @@ class RegisterActivity : AppCompatActivity() {
                     Toast.makeText(this, "A password must be entered.", Toast.LENGTH_SHORT).show()
                 }
 
+                TextUtils.isEmpty(edit_text_register_confirm_password.text.toString().trim {it <= ' '}) ->{
+                    Toast.makeText(this, "A confirmation password must be entered.", Toast.LENGTH_SHORT).show()
+                }
+
                 TextUtils.isEmpty(edit_text_register_first_name.text.toString().trim {it <= ' '}) -> {
                     Toast.makeText(this, "First Name must be entered.", Toast.LENGTH_SHORT).show()
                 }
@@ -52,6 +56,10 @@ class RegisterActivity : AppCompatActivity() {
 
                 TextUtils.isEmpty(edit_text_register_phone.text.toString().trim {it <= ' '}) ->{
                     Toast.makeText(this, "Phone Number must be entered", Toast.LENGTH_SHORT).show()
+                }
+
+                !TextUtils.equals(edit_text_register_confirm_password.text, edit_text_register_password.text) ->{
+                    Toast.makeText(this, "Password Must be the Same", Toast.LENGTH_SHORT).show()
                 }
 
                 else ->{

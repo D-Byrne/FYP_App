@@ -42,6 +42,7 @@
                 android:textStyle="bold"
                 android:textSize="25sp"
                 android:text="David's Offer"
+                android:textColor="@color/black"
                 android:gravity="center"
                 android:layout_marginTop="40dp"/>
 
@@ -52,6 +53,7 @@
                 android:textStyle="normal"
                 android:textSize="20sp"
                 android:text="250"
+                android:textColor="@color/black"
                 android:gravity="center"/>
 
             <TextView

@@ -103,6 +103,7 @@ class ViewOfferActivity : AppCompatActivity() {
         request = intent.extras?.getParcelable<RequestModel>("request")!!
         offer = intent.extras?.getParcelable<OfferModel>("view_offer")!!
         userEmail = intent.extras?.getString("user_email")!!
+        //userEmail = offer.authorEmail!!
 
         offerAccept = intent.extras?.getBoolean("offer_accepted")!!
 
@@ -121,7 +122,7 @@ class ViewOfferActivity : AppCompatActivity() {
         }
 
         view_offer_name.setText(offer.authorName)
-        view_offer_amount.setText(offer.amount)
+        view_offer_amount.setText("€" + offer.amount)
         view_offer_author_email.setText(userEmail)
 
 

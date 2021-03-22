@@ -36,6 +36,7 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
     var lastName: String = ""
     var email: String = ""
     var offerKey: String = ""
+    var offerEmail: String = ""
 
     var request = RequestModel()
 
@@ -150,11 +151,12 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
         database = Firebase.database.reference
 
         val authorId = FirebaseAuth.getInstance().currentUser!!.uid
+        val authorEmail = FirebaseAuth.getInstance().currentUser!!.email
         val authorName = username
         val offerAmount = view_request_offer_field.edit_text_add_offer.text.toString()
         val id = database.push().key
 
-        val offerModel = OfferModel(authorId, authorName, offerAmount)
+        val offerModel = OfferModel(authorId, authorName, offerAmount, null, null, authorEmail)
 
         if(offerExists){
             Toast.makeText(this, "You have already made an offer", Toast.LENGTH_SHORT).show()
@@ -197,20 +199,15 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
        checkOffer()
 
-        //Toast.makeText(this, "Offer $position clicked", Toast.LENGTH_SHORT).show()
         val clickedItem: OfferModel = offerList[position]
-       // Toast.makeText(this, "RequestId: ${clickedItem.offerAccepted}", Toast.LENGTH_SHORT).show()
+
         if(FirebaseAuth.getInstance().currentUser!!.uid == request.authorId){
-          //  Toast.makeText(this, "Allowed to proceed to Accept or Cancel offer.", Toast.LENGTH_SHORT).show()
             if(offerAccept && (clickedItem.offerId!! == currentlyAcceptedId)) {
-
-                startActivityForResult(intentFor<ViewOfferActivity>().putExtra("view_offer", clickedItem).putExtra("request", request).putExtra("user_email", email).putExtra("offer_accepted", offerAccept), 0)
-
+                startActivityForResult(intentFor<ViewOfferActivity>().putExtra("view_offer", clickedItem).putExtra("request", request).putExtra("user_email", offerEmail).putExtra("offer_accepted", offerAccept), 0)
             } else if(offerAccept && (clickedItem.offerId!! != currentlyAcceptedId)){
                 Toast.makeText(this, "Only one offer can be accepted at a time.", Toast.LENGTH_SHORT).show()
             } else if (!offerAccept){
-                startActivityForResult(intentFor<ViewOfferActivity>().putExtra("view_offer", clickedItem).putExtra("request", request).putExtra("user_email", email).putExtra("offer_accepted", offerAccept), 0)
-               // Toast.makeText(this," " + currentlyAcceptedId + " " +clickedItem.offerId, Toast.LENGTH_SHORT).show()
+                startActivityForResult(intentFor<ViewOfferActivity>().putExtra("view_offer", clickedItem).putExtra("request", request).putExtra("user_email", clickedItem.authorEmail).putExtra("offer_accepted", offerAccept), 0)
             }
 
         } else{

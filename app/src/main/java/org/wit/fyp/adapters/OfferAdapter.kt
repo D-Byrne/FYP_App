@@ -41,6 +41,6 @@ class OfferAdapter(var list:ArrayList<OfferModel>, private val listener: OnItemC
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.offerName.text = list[position].authorName
-        holder.offerAmount.text = list[position].amount
+        holder.offerAmount.text = "€" + list[position].amount
     }
 }
