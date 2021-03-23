@@ -46,12 +46,20 @@ class RegisterActivity : AppCompatActivity() {
                     Toast.makeText(this, "A confirmation password must be entered.", Toast.LENGTH_SHORT).show()
                 }
 
-                TextUtils.isEmpty(edit_text_register_first_name.text.toString().trim {it <= ' '}) -> {
-                    Toast.makeText(this, "First Name must be entered.", Toast.LENGTH_SHORT).show()
+                TextUtils.isEmpty(edit_text_register_first_name.text.toString().trim {it <= ' '}) || !isLetters(edit_text_register_first_name.text.toString()) -> {
+                    if(!isLetters(edit_text_register_first_name.text.toString())){
+                        Toast.makeText(this, "First Name can only contain letters.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "First Name must be entered.", Toast.LENGTH_SHORT).show()
+                    }
                 }
 
-                TextUtils.isEmpty(edit_text_register_last_name.text.toString().trim {it <= ' '}) ->{
-                    Toast.makeText(this, "Last Name must be entered.", Toast.LENGTH_SHORT).show()
+                TextUtils.isEmpty(edit_text_register_last_name.text.toString().trim {it <= ' '}) || !isLetters(edit_text_register_last_name.text.toString()) ->{
+                    if(!isLetters(edit_text_register_last_name.text.toString())){
+                        Toast.makeText(this, "Last Name can only contain letters.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(this, "Last Name must be entered.", Toast.LENGTH_SHORT).show()
+                    }
                 }
 
                 TextUtils.isEmpty(edit_text_register_phone.text.toString().trim {it <= ' '}) ->{
@@ -95,6 +103,10 @@ class RegisterActivity : AppCompatActivity() {
            startActivity(Intent(this, LoginActivity::class.java))
         }
 
+    }
+
+    fun isLetters(string: String): Boolean {
+        return string.all { it.isLetter() }
     }
 
     private fun writeToDatabase(){
