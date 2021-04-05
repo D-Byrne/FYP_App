@@ -147,16 +147,23 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
         //Toast.makeText(this, "Request $position clicked", Toast.LENGTH_SHORT).show()
         val clickedItem: RequestModel = requestList[position]
 
-        if(isEdit) {
+        if(isEdit && (clickedItem.authorId == FirebaseAuth.getInstance().currentUser!!.uid)) {
             Toast.makeText(this, "Editing", Toast.LENGTH_SHORT).show()
 
             startActivityForResult(intentFor<AddRequestActivity>().putExtra("edit_request", clickedItem), 0)
-        }else if(isDelete){
+        }else if( isEdit && (clickedItem.authorId != FirebaseAuth.getInstance().currentUser!!.uid)){
+
+            Toast.makeText(this, "Can't edit other users requests", Toast.LENGTH_SHORT).show()
+
+        } else if(isDelete && (clickedItem.authorId == FirebaseAuth.getInstance().currentUser!!.uid)){
             Toast.makeText(this, "Delete", Toast.LENGTH_SHORT).show()
 
             database.child(clickedItem.reqId!!).removeValue()
-        }
-        else{
+        }else if(isDelete && (clickedItem.authorId != FirebaseAuth.getInstance().currentUser!!.uid)){
+
+            Toast.makeText(this, "Can't delete other users requests", Toast.LENGTH_SHORT).show()
+
+        } else{
             startActivityForResult(intentFor<ViewRequestActivity>().putExtra("view_request_model", clickedItem), 0)
         }
         //Toast.makeText(this, "RequestId: ${clickedItem.reqId}", Toast.LENGTH_SHORT).show()

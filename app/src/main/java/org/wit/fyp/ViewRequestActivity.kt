@@ -255,6 +255,9 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
                 startActivityForResult(intentFor<ViewOfferActivity>().putExtra("view_offer", clickedItem).putExtra("request", request).putExtra("user_email", clickedItem.authorEmail).putExtra("offer_accepted", offerAccept), 0)
             }
 
+        } else if (clickedItem.authorId == FirebaseAuth.getInstance().currentUser!!.uid){
+            startActivityForResult(intentFor<ViewOfferActivity>().putExtra("request", request).putExtra("view_offer", clickedItem).putExtra("offer_accepted", offerAccept),0)
+
         } else{
             Toast.makeText(this, "Not Allowed to proceed.", Toast.LENGTH_SHORT).show()
         }

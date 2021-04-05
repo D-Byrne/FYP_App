@@ -89,6 +89,34 @@
                 android:text="Accept Offer" />
 
             <Button
+                android:id="@+id/btn_edit_offer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:foreground="?attr/selectableItemBackground"
+                android:background="@color/red_gradient_two"
+                android:visibility="gone"
+                android:text="Edit Offer" />
+
+            <Button
+                android:id="@+id/btn_delete_offer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:foreground="?attr/selectableItemBackground"
+                android:background="@color/red_gradient_two"
+                android:visibility="gone"
+                android:text="Delete Offer" />
+
+            <Button
                 android:id="@+id/btn_cancel_offer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

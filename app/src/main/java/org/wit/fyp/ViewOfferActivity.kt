@@ -3,6 +3,7 @@ package org.wit.fyp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
@@ -14,6 +15,8 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_view_offer.*
 import kotlinx.android.synthetic.main.activity_view_request.*
 import kotlinx.android.synthetic.main.activity_view_request.view.*
+import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.startActivityForResult
 import org.wit.fyp.models.OfferModel
 import org.wit.fyp.models.RequestModel
 
@@ -73,6 +76,15 @@ class ViewOfferActivity : AppCompatActivity() {
             }
 
         }
+
+        btn_edit_offer.setOnClickListener{
+            startActivityForResult(intentFor<EditOfferActivity>().putExtra("request", request).putExtra("view_offer", offer), 0)
+        }
+
+        btn_delete_offer.setOnClickListener{
+            database.child("requests/${request.reqId}").child("offers/${offer.offerId}").removeValue()
+            startActivityForResult<RequestListActivity>(0)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -115,10 +127,24 @@ class ViewOfferActivity : AppCompatActivity() {
         view_offer_amount.setText("€" + offer.amount)
         view_offer_author_email.setText(userEmail)
 
-        if(offerAccept){
+        if(offerAccept && (request.authorId == FirebaseAuth.getInstance().currentUser!!.uid)){
             view_offer_author_email.isVisible = true
             btn_accept_offer.isVisible = false
+            btn_edit_offer.isVisible = false
+            btn_delete_offer.isVisible = false
             btn_cancel_offer.isVisible = true
+        } else if(offerAccept && (offer.authorId == FirebaseAuth.getInstance().currentUser!!.uid)){
+            view_offer_author_email.isVisible = false
+            btn_accept_offer.isVisible = false
+            btn_edit_offer.isVisible = false
+            btn_delete_offer.isVisible = false
+            btn_cancel_offer.isVisible = false
+        } else if(!offerAccept && (offer.authorId == FirebaseAuth.getInstance().currentUser!!.uid)){
+            view_offer_author_email.isVisible = false
+            btn_accept_offer.isVisible = false
+            btn_edit_offer.isVisible = true
+            btn_delete_offer.isVisible = true
+            btn_cancel_offer.isVisible = false
         } else{
             view_offer_author_email.isVisible = false
             btn_accept_offer.isVisible = true
