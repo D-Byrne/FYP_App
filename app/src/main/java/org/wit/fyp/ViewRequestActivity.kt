@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.core.graphics.toColor
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
@@ -39,8 +40,9 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
     var offerEmail: String = ""
 
     var request = RequestModel()
-
+    var currentOffer = OfferModel()
     var offerList = ArrayList<OfferModel>()
+
     var offerExists: Boolean = false
     var ownRequest: Boolean = false
 
@@ -78,8 +80,42 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
     }
 
+    /*
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_top_main, menu)
+        if(isEdit || isDelete) menu!!.getItem(0).setVisible(true)
+        if(isEdit) menu!!.getItem(2).setVisible(false)
+        if(isDelete) menu!!.getItem(1).setVisible(false)
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.menu_top_delete -> { isDelete = true
+                toolbar.title = "Delete Request"
+                invalidateOptionsMenu()}
+            R.id.menu_top_edit -> { isEdit = true
+                toolbar.title = "Edit Request"
+                invalidateOptionsMenu()}
+            R.id.menu_top_done -> { isEdit = false
+                isDelete =false
+                toolbar.title = "User Requests"
+                invalidateOptionsMenu()}
+
+            //android.R.id.home -> { Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show() }
+
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+     */
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_top_view_request, menu)
+        if( offerAccept && ownRequest){
+            menu!!.getItem(0).setVisible(true)
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -87,6 +123,7 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
         when(item.itemId){
 
             android.R.id.home -> { finish() }
+            R.id.menu_complete_task -> { startActivityForResult(intentFor<AddReviewActivity>().putExtra("accepted_offer", currentOffer), 0) }
 
         }
         return super.onOptionsItemSelected(item)
@@ -103,6 +140,10 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
         toolbar_view_request.title = request.authorName + "'s Request"
 
+        if(FirebaseAuth.getInstance().currentUser!!.uid == request.authorId){
+            ownRequest = true
+            invalidateOptionsMenu()
+        }
         //database = Firebase.database.reference.child("requests").child(request.reqId!!).child("offers")
     }
 
@@ -134,6 +175,8 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
         })
 
+        checkOffer()
+
     }
 
     private fun addOffer(){
@@ -146,6 +189,7 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
         if(FirebaseAuth.getInstance().currentUser!!.uid == request.authorId){
             ownRequest = true
+            //invalidateOptionsMenu()
         }
 
         database = Firebase.database.reference
@@ -193,6 +237,7 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
                 }
             }
         })
+
     }
 
     override fun onItemClick(position: Int) {
@@ -219,10 +264,11 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
     fun checkOffer(){
         for (offer in offerList){
                 if(offer.offerAccepted == true) {
-                    // Toast.makeText(this, offer.authorName + offer.amount + offer.offerAccepted, Toast.LENGTH_SHORT).show()
                     offerAccept = true
                     currentlyAcceptedId = offer.offerId!!
                     view_request_offer_status_tv.setText("Offer Accepted")
+                    currentOffer = offer
+                    invalidateOptionsMenu()
                 }
 
         }

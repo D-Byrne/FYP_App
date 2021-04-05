@@ -48,7 +48,7 @@ class RequestAdapter(var list:ArrayList<RequestModel>, private val listener: OnI
         holder.title.text = list[position].requestTitle
         holder.details.text = list[position].requestDetails
         holder.deadline.text = "Accepting offers until: " + list[position].requestDeadline
-        holder.location.text = list[position].requestLocation
+        holder.location.text = "Location: " + list[position].requestLocation
         holder.requestName.text = "Posted by: " + list[position].authorName
         holder.reqId.text = list[position].reqId
 

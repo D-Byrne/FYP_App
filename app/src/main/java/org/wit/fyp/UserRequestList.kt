@@ -13,12 +13,14 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
+import com.google.firebase.database.ktx.getValue
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_request_list.*
 import kotlinx.android.synthetic.main.activity_user_request_list.*
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.startActivityForResult
 import org.wit.fyp.adapters.RequestAdapter
+import org.wit.fyp.models.OfferModel
 import org.wit.fyp.models.RequestModel
 
 class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener {
@@ -28,6 +30,10 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
     var reqKey: String = ""
     var isEdit: Boolean = false
     var isDelete: Boolean = false
+
+    var numberChildren: Long = 0
+
+    var offerList = ArrayList<OfferModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,6 +109,25 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                     var model = data.getValue(RequestModel::class.java)
                     reqKey = data.key!!
                     model!!.reqId = reqKey
+
+                    data.hasChild("offers")
+
+                    for(newData in data.child("offers").children){
+                        newData.hasChild("authorName")
+                        var newModel = newData.getValue(OfferModel::class.java)
+
+                        if(newModel!!.authorId == FirebaseAuth.getInstance().currentUser!!.uid){
+                            requestList.add(model as RequestModel)
+                        }
+
+
+                        Log.d("TAGLLE", newData.hasChild("authorName").toString() + newModel!!.authorId)
+                    }
+
+                   // Log.d("TAGLLE", data.child("offers").children)
+
+                   // Log.d("TAGLLE", data.child("offers").children.toString())
+
                     if(model.authorId == FirebaseAuth.getInstance().currentUser!!.uid) {
                         requestList.add(model as RequestModel)
                     }
@@ -115,6 +140,7 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
             }
 
         })
+        //Toast.makeText(this, numberChildren, Toast.LENGTH_SHORT).show()
     }
 
     override fun onItemClick(position: Int) {

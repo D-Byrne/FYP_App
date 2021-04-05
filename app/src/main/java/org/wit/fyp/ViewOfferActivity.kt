@@ -102,14 +102,18 @@ class ViewOfferActivity : AppCompatActivity() {
     fun setFromIntent(){
         request = intent.extras?.getParcelable<RequestModel>("request")!!
         offer = intent.extras?.getParcelable<OfferModel>("view_offer")!!
-        userEmail = intent.extras?.getString("user_email")!!
-        //userEmail = offer.authorEmail!!
+        //userEmail = intent.extras?.getString("user_email")!!
+        userEmail = offer.authorEmail!!
 
         offerAccept = intent.extras?.getBoolean("offer_accepted")!!
 
         toolbar_view_offer.title = offer.authorName + "'s Offer"
 
         Toast.makeText(this, "Value: " + offerAccept, Toast.LENGTH_SHORT).show()
+
+        view_offer_name.setText(offer.authorName)
+        view_offer_amount.setText("€" + offer.amount)
+        view_offer_author_email.setText(userEmail)
 
         if(offerAccept){
             view_offer_author_email.isVisible = true
@@ -120,10 +124,6 @@ class ViewOfferActivity : AppCompatActivity() {
             btn_accept_offer.isVisible = true
             btn_cancel_offer.isVisible = false
         }
-
-        view_offer_name.setText(offer.authorName)
-        view_offer_amount.setText("€" + offer.amount)
-        view_offer_author_email.setText(userEmail)
 
 
     }
