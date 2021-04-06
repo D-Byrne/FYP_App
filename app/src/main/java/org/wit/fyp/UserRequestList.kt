@@ -1,11 +1,13 @@
 package org.wit.fyp
 
+import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -148,7 +150,7 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
         val clickedItem: RequestModel = requestList[position]
 
         if(isEdit && (clickedItem.authorId == FirebaseAuth.getInstance().currentUser!!.uid)) {
-            Toast.makeText(this, "Editing", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "Editing", Toast.LENGTH_SHORT).show()
 
             startActivityForResult(intentFor<AddRequestActivity>().putExtra("edit_request", clickedItem), 0)
         }else if( isEdit && (clickedItem.authorId != FirebaseAuth.getInstance().currentUser!!.uid)){
@@ -156,9 +158,19 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
             Toast.makeText(this, "Can't edit other users requests", Toast.LENGTH_SHORT).show()
 
         } else if(isDelete && (clickedItem.authorId == FirebaseAuth.getInstance().currentUser!!.uid)){
-            Toast.makeText(this, "Delete", Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, "Delete", Toast.LENGTH_SHORT).show()
 
-            database.child(clickedItem.reqId!!).removeValue()
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Are You Sure?")
+            builder.setMessage("Do you want to delete this request?")
+            builder.setPositiveButton("Yes", { dialogInterface: DialogInterface, i: Int ->
+                database.child(clickedItem.reqId!!).removeValue()
+            })
+            builder.setNegativeButton("No", { dialogInterface: DialogInterface, i: Int ->
+
+            })
+            builder.show()
+
         }else if(isDelete && (clickedItem.authorId != FirebaseAuth.getInstance().currentUser!!.uid)){
 
             Toast.makeText(this, "Can't delete other users requests", Toast.LENGTH_SHORT).show()

@@ -1,5 +1,6 @@
 package org.wit.fyp
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
@@ -82,8 +84,18 @@ class ViewOfferActivity : AppCompatActivity() {
         }
 
         btn_delete_offer.setOnClickListener{
-            database.child("requests/${request.reqId}").child("offers/${offer.offerId}").removeValue()
-            startActivityForResult<RequestListActivity>(0)
+
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("Are You Sure?")
+            builder.setMessage("Do you want to delete this offer?")
+            builder.setPositiveButton("Yes", { dialogInterface: DialogInterface, i: Int ->
+                database.child("requests/${request.reqId}").child("offers/${offer.offerId}").removeValue()
+                startActivityForResult<RequestListActivity>(0)
+            })
+            builder.setNegativeButton("No", { dialogInterface: DialogInterface, i: Int ->
+
+            })
+            builder.show()
         }
     }
 
