@@ -20,6 +20,18 @@
         android:title="Delete"
         app:showAsAction="always"/>
 
+    <item
+        android:id="@+id/menu_top_show_accepted"
+        android:title="Accepted Offers"/>
+
+    <item
+        android:id="@+id/menu_top_show_all"
+        android:title="My Requests &amp; Offers"/>
+
+    <item
+        android:id="@+id/menu_top_only_requests"
+        android:title="My Requests"/>
+
 
 
 </menu>

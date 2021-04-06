@@ -29,13 +29,16 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
 
     private lateinit var database : DatabaseReference
     var requestList = ArrayList<RequestModel>()
+    var acceptedList = ArrayList<RequestModel>()
+    var onlyRequestList = ArrayList<RequestModel>()
+
     var reqKey: String = ""
     var isEdit: Boolean = false
     var isDelete: Boolean = false
 
-    var numberChildren: Long = 0
-
-    var offerList = ArrayList<OfferModel>()
+    var currentlyOnMain = true
+    var currentlyOnAccepted = false
+    var currentlyOnAll = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,7 +51,8 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.setDisplayShowHomeEnabled(false)
-        toolbar.title = "User Requests"
+        toolbar.title = "User Requests & Offers"
+       // toolbar.setSubtitle("Accepted Offers: ")
 
 
         val layoutManager = LinearLayoutManager(this)
@@ -90,6 +94,42 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                                     isDelete =false
                                     toolbar.title = "User Requests"
                                     invalidateOptionsMenu()}
+            R.id.menu_top_only_requests -> {
+                if(currentlyOnMain){
+                    Toast.makeText(this, "Already viewing your requests.", Toast.LENGTH_SHORT).show()
+                } else if(!currentlyOnMain || currentlyOnAccepted || currentlyOnAll){
+                    val adapter = RequestAdapter(onlyRequestList, this@UserRequestList)
+                    recyclerViewPerUser.adapter = adapter
+
+                    currentlyOnMain = true
+                    currentlyOnAccepted = false
+                    currentlyOnAll = false
+                }
+            }
+            R.id.menu_top_show_accepted -> {
+                if(currentlyOnAccepted){
+                    Toast.makeText(this, "Already viewing accepted offers.", Toast.LENGTH_SHORT).show()
+                } else if(!currentlyOnAccepted || currentlyOnMain || currentlyOnAll){
+                    val adapter = RequestAdapter(acceptedList, this@UserRequestList)
+                    recyclerViewPerUser.adapter = adapter
+
+                    currentlyOnAccepted = true
+                    currentlyOnMain = false
+                    currentlyOnAll = false
+                }
+            }
+            R.id.menu_top_show_all -> {
+                if(currentlyOnAll){
+                    Toast.makeText(this, "Already viewing requests and posts.", Toast.LENGTH_SHORT).show()
+                } else if(!currentlyOnAll){
+                    val adapter = RequestAdapter(requestList, this@UserRequestList)
+                    recyclerViewPerUser.adapter = adapter
+
+                    currentlyOnAll = true
+                    currentlyOnMain = false
+                    currentlyOnAccepted = false
+                }
+            }
 
             //android.R.id.home -> { Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show() }
 
@@ -106,6 +146,8 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
 
             override fun onDataChange(snapshot: DataSnapshot) {
                 requestList.clear()
+                acceptedList.clear()
+                onlyRequestList.clear()
 
                 for(data in snapshot.children){
                     var model = data.getValue(RequestModel::class.java)
@@ -121,21 +163,32 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                         if(newModel!!.authorId == FirebaseAuth.getInstance().currentUser!!.uid){
                             requestList.add(model as RequestModel)
                         }
+                        if( (newModel!!.authorId == FirebaseAuth.getInstance().currentUser!!.uid) && (newModel!!.offerAccepted == true) ){
+                            acceptedList.add(model as RequestModel)
+                        }
 
-
+                        Log.d("AcceptedThing", "Yes: " + acceptedList.size)
                         Log.d("TAGLLE", newData.hasChild("authorName").toString() + newModel!!.authorId)
                     }
 
+                    if(acceptedList.size > 0){
+                        toolbar.setSubtitle("Accepted Offers: ${acceptedList.size}")
+
+                    } else if(acceptedList.size < 1){
+                        toolbar.setSubtitle("Accepted Offers: 0")
+
+                    }
                    // Log.d("TAGLLE", data.child("offers").children)
 
                    // Log.d("TAGLLE", data.child("offers").children.toString())
 
                     if(model.authorId == FirebaseAuth.getInstance().currentUser!!.uid) {
                         requestList.add(model as RequestModel)
+                        onlyRequestList.add(model as RequestModel)
                     }
                 }
-                if(requestList.size > 0){
-                    val adapter = RequestAdapter(requestList, this@UserRequestList)
+                if(onlyRequestList.size > 0 && currentlyOnMain){
+                    val adapter = RequestAdapter(onlyRequestList, this@UserRequestList)
                     recyclerViewPerUser.adapter = adapter
                     //Toast.makeText(applicationContext, reqId, Toast.LENGTH_SHORT).show()
                 }
@@ -146,8 +199,18 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
     }
 
     override fun onItemClick(position: Int) {
+        var clickedItem: RequestModel = requestList[position]
+
         //Toast.makeText(this, "Request $position clicked", Toast.LENGTH_SHORT).show()
-        val clickedItem: RequestModel = requestList[position]
+        if(currentlyOnMain){
+            clickedItem = onlyRequestList[position]
+        } else if(currentlyOnAll){
+            clickedItem = requestList[position]
+        } else if(currentlyOnAccepted){
+            clickedItem = acceptedList[position]
+        }
+
+        //val clickedItem: RequestModel = requestList[position]
 
         if(isEdit && (clickedItem.authorId == FirebaseAuth.getInstance().currentUser!!.uid)) {
             //Toast.makeText(this, "Editing", Toast.LENGTH_SHORT).show()

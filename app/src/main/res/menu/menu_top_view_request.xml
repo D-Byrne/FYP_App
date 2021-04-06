@@ -9,8 +9,4 @@
         android:visible="false"
         android:title="Complete" />
 
-    <item
-        android:id="@+id/menu_complete"
-        android:title="Complete"/>
-
 </menu>
