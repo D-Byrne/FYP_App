@@ -31,6 +31,8 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
     var requestList = ArrayList<RequestModel>()
     var acceptedList = ArrayList<RequestModel>()
     var onlyRequestList = ArrayList<RequestModel>()
+    var pendingRatingList = ArrayList<RequestModel>()
+    var completedRequestsList = ArrayList<RequestModel>()
 
     var reqKey: String = ""
     var isEdit: Boolean = false
@@ -39,6 +41,8 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
     var currentlyOnMain = true
     var currentlyOnAccepted = false
     var currentlyOnAll = false
+    var currentlyOnPending = false
+    var currentlyOnComplete = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,25 +101,29 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
             R.id.menu_top_only_requests -> {
                 if(currentlyOnMain){
                     Toast.makeText(this, "Already viewing your requests.", Toast.LENGTH_SHORT).show()
-                } else if(!currentlyOnMain || currentlyOnAccepted || currentlyOnAll){
+                } else if(!currentlyOnMain || currentlyOnAccepted || currentlyOnAll || currentlyOnPending || currentlyOnComplete){
                     val adapter = RequestAdapter(onlyRequestList, this@UserRequestList)
                     recyclerViewPerUser.adapter = adapter
 
                     currentlyOnMain = true
                     currentlyOnAccepted = false
                     currentlyOnAll = false
+                    currentlyOnPending = false
+                    currentlyOnComplete = false
                 }
             }
             R.id.menu_top_show_accepted -> {
                 if(currentlyOnAccepted){
                     Toast.makeText(this, "Already viewing accepted offers.", Toast.LENGTH_SHORT).show()
-                } else if(!currentlyOnAccepted || currentlyOnMain || currentlyOnAll){
+                } else if(!currentlyOnAccepted || currentlyOnMain || currentlyOnAll || currentlyOnPending || currentlyOnComplete){
                     val adapter = RequestAdapter(acceptedList, this@UserRequestList)
                     recyclerViewPerUser.adapter = adapter
 
                     currentlyOnAccepted = true
                     currentlyOnMain = false
                     currentlyOnAll = false
+                    currentlyOnPending = false
+                    currentlyOnComplete = false
                 }
             }
             R.id.menu_top_show_all -> {
@@ -128,6 +136,38 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                     currentlyOnAll = true
                     currentlyOnMain = false
                     currentlyOnAccepted = false
+                    currentlyOnPending = false
+                    currentlyOnComplete = false
+                }
+            }
+            R.id.menu_top_show_pending_rating -> {
+                if(currentlyOnPending){
+                    Toast.makeText(this, "Already viewing pending ratings.", Toast.LENGTH_SHORT).show()
+                } else if(!currentlyOnPending || currentlyOnMain || currentlyOnAll || currentlyOnAccepted || currentlyOnComplete){
+                    val adapter = RequestAdapter(pendingRatingList, this@UserRequestList)
+                    recyclerViewPerUser.adapter = adapter
+
+                    currentlyOnPending = true
+                    currentlyOnAll = false
+                    currentlyOnMain = false
+                    currentlyOnAccepted = false
+                    currentlyOnComplete = false
+                }
+            }
+            R.id.menu_top_completed_requests -> {
+                if(currentlyOnComplete){
+                    Toast.makeText(this, "Already Viewing complete Requests/Offers", Toast.LENGTH_SHORT).show()
+                } else if (!currentlyOnComplete || currentlyOnPending || currentlyOnAccepted || currentlyOnMain || currentlyOnAll){
+                    val adapter = RequestAdapter(completedRequestsList, this@UserRequestList)
+                    recyclerViewPerUser.adapter = adapter
+
+                    currentlyOnComplete = true
+                    currentlyOnPending = false
+                    currentlyOnAll = false
+                    currentlyOnMain = false
+                    currentlyOnAccepted = false
+
+
                 }
             }
 
@@ -148,6 +188,8 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                 requestList.clear()
                 acceptedList.clear()
                 onlyRequestList.clear()
+                pendingRatingList.clear()
+                completedRequestsList.clear()
 
                 for(data in snapshot.children){
                     var model = data.getValue(RequestModel::class.java)
@@ -163,7 +205,7 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                         if(newModel!!.authorId == FirebaseAuth.getInstance().currentUser!!.uid){
                             requestList.add(model as RequestModel)
                         }
-                        if( (newModel!!.authorId == FirebaseAuth.getInstance().currentUser!!.uid) && (newModel!!.offerAccepted == true) ){
+                        if( (newModel!!.authorId == FirebaseAuth.getInstance().currentUser!!.uid) && (newModel!!.offerAccepted == true) && newModel.requestCompleted != true){
                             acceptedList.add(model as RequestModel)
                         }
 
@@ -181,6 +223,17 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                    // Log.d("TAGLLE", data.child("offers").children)
 
                    // Log.d("TAGLLE", data.child("offers").children.toString())
+
+                    if(model.offerAuthorRating == false && model.completedBy == FirebaseAuth.getInstance().currentUser!!.uid){
+                        pendingRatingList.add(model as RequestModel)
+                    } else if( (model.offerAuthorRating == true && model.completedBy == FirebaseAuth.getInstance().currentUser!!.uid) || (model.requestCompleted == true && model.authorId == FirebaseAuth.getInstance().currentUser!!.uid) ){
+                        completedRequestsList.add(model  as RequestModel)
+                    }
+
+                    Log.d("PendingThing", "Yes: " + pendingRatingList.size + model.completedBy + ", " + model.offerAuthorRating)
+                    Log.d("CompletedThing", "Yes: " + completedRequestsList.size)
+
+
 
                     if(model.authorId == FirebaseAuth.getInstance().currentUser!!.uid) {
                         requestList.add(model as RequestModel)
@@ -208,6 +261,10 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
             clickedItem = requestList[position]
         } else if(currentlyOnAccepted){
             clickedItem = acceptedList[position]
+        } else if(currentlyOnPending){
+            clickedItem = pendingRatingList[position]
+        } else if(currentlyOnComplete){
+            clickedItem = completedRequestsList[position]
         }
 
         //val clickedItem: RequestModel = requestList[position]
@@ -220,7 +277,7 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
 
             Toast.makeText(this, "Can't edit other users requests", Toast.LENGTH_SHORT).show()
 
-        } else if(isDelete && (clickedItem.authorId == FirebaseAuth.getInstance().currentUser!!.uid)){
+        } else if(isDelete && (clickedItem.authorId == FirebaseAuth.getInstance().currentUser!!.uid && clickedItem.requestCompleted != true)){
             //Toast.makeText(this, "Delete", Toast.LENGTH_SHORT).show()
 
             val builder = AlertDialog.Builder(this)
@@ -237,6 +294,9 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
         }else if(isDelete && (clickedItem.authorId != FirebaseAuth.getInstance().currentUser!!.uid)){
 
             Toast.makeText(this, "Can't delete other users requests", Toast.LENGTH_SHORT).show()
+
+        } else if (isDelete && (clickedItem.authorId == FirebaseAuth.getInstance().currentUser!!.uid && clickedItem.requestCompleted == true)){
+            Toast.makeText(this, "Can't delete completed requests", Toast.LENGTH_SHORT).show()
 
         } else{
             startActivityForResult(intentFor<ViewRequestActivity>().putExtra("view_request_model", clickedItem), 0)

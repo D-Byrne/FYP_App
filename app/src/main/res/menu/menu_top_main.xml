@@ -23,6 +23,13 @@
     <item
         android:id="@+id/menu_top_show_accepted"
         android:title="Accepted Offers"/>
+    <item
+        android:id="@+id/menu_top_show_pending_rating"
+        android:title="Pending Ratings"/>
+
+    <item
+        android:id="@+id/menu_top_completed_requests"
+        android:title="Completed Requests/Offers"/>
 
     <item
         android:id="@+id/menu_top_show_all"

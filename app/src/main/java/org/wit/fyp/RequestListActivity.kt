@@ -99,7 +99,12 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
                     var model = data.getValue(RequestModel::class.java)
                     reqKey = data.key!!
                     model!!.reqId = reqKey
-                    requestList.add(model as RequestModel)
+
+
+                    if(model.requestCompleted != true) {
+                        requestList.add(model as RequestModel)
+                    }
+
                 }
                 if(requestList.size > 0){
                     val adapter = RequestAdapter(requestList, this@RequestListActivity)

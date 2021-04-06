@@ -101,9 +101,13 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
 
             if( (edit_text_add_request_title.text.toString().trim().isNotEmpty()) && (edit_text_add_request_details.text.toString().trim().isNotEmpty()) && (deadline_label.text.toString().trim() != "DD - MM - YYYY") && ((checkList.contains(locationSpin) ) || (checkList.contains(locationSpin) ))){
                // writeToDatabase()
-                updateRequest()
-                startActivity(Intent(this, UserRequestList::class.java))
-                finish()
+                if(editRequest.requestCompleted != true) {
+                    updateRequest()
+                    startActivity(Intent(this, UserRequestList::class.java))
+                    finish()
+                }else{
+                    Toast.makeText(this, "Can't edit completed requests.", Toast.LENGTH_SHORT).show()
+                }
             }else{
                 Toast.makeText(this, "All fields must be entered or selected.", Toast.LENGTH_SHORT).show()
             }

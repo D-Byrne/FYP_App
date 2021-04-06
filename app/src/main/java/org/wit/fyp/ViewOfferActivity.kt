@@ -139,7 +139,7 @@ class ViewOfferActivity : AppCompatActivity() {
         view_offer_amount.setText("€" + offer.amount)
         view_offer_author_email.setText(userEmail)
 
-        if(offerAccept && (request.authorId == FirebaseAuth.getInstance().currentUser!!.uid)){
+        if(offerAccept && (request.authorId == FirebaseAuth.getInstance().currentUser!!.uid) && request.requestCompleted != true){
             view_offer_author_email.isVisible = true
             btn_accept_offer.isVisible = false
             btn_edit_offer.isVisible = false
@@ -157,6 +157,10 @@ class ViewOfferActivity : AppCompatActivity() {
             btn_edit_offer.isVisible = true
             btn_delete_offer.isVisible = true
             btn_cancel_offer.isVisible = false
+        } else if(request.requestCompleted == true){
+            btn_accept_offer.isVisible = false
+            btn_cancel_offer.isVisible = false
+            view_offer_author_email.isVisible = false
         } else{
             view_offer_author_email.isVisible = false
             btn_accept_offer.isVisible = true

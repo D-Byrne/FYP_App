@@ -46,6 +46,8 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
     var offerExists: Boolean = false
     var ownRequest: Boolean = false
 
+    var notComplete = true
+
     var offerAccept: Boolean = false
     var currentlyAcceptedId: String = ""
     
@@ -80,40 +82,9 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
     }
 
-    /*
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_top_main, menu)
-        if(isEdit || isDelete) menu!!.getItem(0).setVisible(true)
-        if(isEdit) menu!!.getItem(2).setVisible(false)
-        if(isDelete) menu!!.getItem(1).setVisible(false)
-
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
-            R.id.menu_top_delete -> { isDelete = true
-                toolbar.title = "Delete Request"
-                invalidateOptionsMenu()}
-            R.id.menu_top_edit -> { isEdit = true
-                toolbar.title = "Edit Request"
-                invalidateOptionsMenu()}
-            R.id.menu_top_done -> { isEdit = false
-                isDelete =false
-                toolbar.title = "User Requests"
-                invalidateOptionsMenu()}
-
-            //android.R.id.home -> { Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show() }
-
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-     */
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_top_view_request, menu)
-        if( offerAccept && ownRequest){
+        if( offerAccept && ownRequest && notComplete){
             menu!!.getItem(0).setVisible(true)
         }
         return super.onCreateOptionsMenu(menu)
@@ -123,7 +94,7 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
         when(item.itemId){
 
             android.R.id.home -> { finish() }
-            R.id.menu_complete_task -> { startActivityForResult(intentFor<AddReviewActivity>().putExtra("accepted_offer", currentOffer), 0) }
+            R.id.menu_complete_task -> { startActivityForResult(intentFor<AddReviewActivity>().putExtra("accepted_offer", currentOffer).putExtra("request", request).putExtra("ownRequest", ownRequest), 0) }
 
         }
         return super.onOptionsItemSelected(item)
@@ -140,11 +111,21 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
         toolbar_view_request.title = request.authorName + "'s Request"
 
-        if(FirebaseAuth.getInstance().currentUser!!.uid == request.authorId){
+
+        if ( (FirebaseAuth.getInstance().currentUser!!.uid == request.authorId) && (request.requestCompleted == true) ){
+            notComplete = false
+        } else if(FirebaseAuth.getInstance().currentUser!!.uid == request.authorId){
             ownRequest = true
             invalidateOptionsMenu()
         }
-        //database = Firebase.database.reference.child("requests").child(request.reqId!!).child("offers")
+
+        if(request.offerAuthorRating == false && request.completedBy == FirebaseAuth.getInstance().currentUser!!.uid){
+            Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show()
+            startActivityForResult(intentFor<AddReviewActivity>().putExtra("request", request).putExtra("accepted_offer", currentOffer).putExtra("ownRequest", ownRequest), 0)
+        }else if(request.offerAuthorRating == true && request.completedBy == FirebaseAuth.getInstance().currentUser!!.uid){
+            notComplete = false
+        }
+
     }
 
     private fun getOffer(){
@@ -163,6 +144,8 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
                     val model = data.getValue(OfferModel::class.java)
                     offerKey = data.key!!
                     model!!.offerId = offerKey
+
+
                     offerList.add(model as OfferModel)
                 }
                 if(offerList.size > 0){
@@ -246,21 +229,23 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
         val clickedItem: OfferModel = offerList[position]
 
-        if(FirebaseAuth.getInstance().currentUser!!.uid == request.authorId){
-            if(offerAccept && (clickedItem.offerId!! == currentlyAcceptedId)) {
-                startActivityForResult(intentFor<ViewOfferActivity>().putExtra("view_offer", clickedItem).putExtra("request", request).putExtra("user_email", offerEmail).putExtra("offer_accepted", offerAccept), 0)
-            } else if(offerAccept && (clickedItem.offerId!! != currentlyAcceptedId)){
-                Toast.makeText(this, "Only one offer can be accepted at a time.", Toast.LENGTH_SHORT).show()
-            } else if (!offerAccept){
-                startActivityForResult(intentFor<ViewOfferActivity>().putExtra("view_offer", clickedItem).putExtra("request", request).putExtra("user_email", clickedItem.authorEmail).putExtra("offer_accepted", offerAccept), 0)
+            if (FirebaseAuth.getInstance().currentUser!!.uid == request.authorId) {
+                if (offerAccept && (clickedItem.offerId!! == currentlyAcceptedId)) {
+                    startActivityForResult(intentFor<ViewOfferActivity>().putExtra("view_offer", clickedItem).putExtra("request", request).putExtra("user_email", offerEmail).putExtra("offer_accepted", offerAccept), 0)
+                } else if (offerAccept && (clickedItem.offerId!! != currentlyAcceptedId)) {
+                    Toast.makeText(this, "Only one offer can be accepted at a time.", Toast.LENGTH_SHORT).show()
+                } else if (!offerAccept) {
+                    startActivityForResult(intentFor<ViewOfferActivity>().putExtra("view_offer", clickedItem).putExtra("request", request).putExtra("user_email", clickedItem.authorEmail).putExtra("offer_accepted", offerAccept), 0)
+                }
+
+            } else if (clickedItem.authorId == FirebaseAuth.getInstance().currentUser!!.uid) {
+                startActivityForResult(intentFor<ViewOfferActivity>().putExtra("request", request).putExtra("view_offer", clickedItem).putExtra("offer_accepted", offerAccept), 0)
+
+            } else {
+                Toast.makeText(this, "Not Allowed to proceed.", Toast.LENGTH_SHORT).show()
             }
 
-        } else if (clickedItem.authorId == FirebaseAuth.getInstance().currentUser!!.uid){
-            startActivityForResult(intentFor<ViewOfferActivity>().putExtra("request", request).putExtra("view_offer", clickedItem).putExtra("offer_accepted", offerAccept),0)
 
-        } else{
-            Toast.makeText(this, "Not Allowed to proceed.", Toast.LENGTH_SHORT).show()
-        }
 
     }
 
