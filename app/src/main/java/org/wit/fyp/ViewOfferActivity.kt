@@ -61,6 +61,10 @@ class ViewOfferActivity : AppCompatActivity() {
             }
         }
 
+        btn_view_ratings.setOnClickListener{
+            startActivityForResult(intentFor<ListRatingsActivity>(), 0)
+        }
+
         btn_cancel_offer.setOnClickListener{
 
             if(offerAccept == true) {
