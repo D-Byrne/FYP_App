@@ -29,6 +29,15 @@
             android:textColor="@color/black"
             android:text="Details wrap_content wrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_contentwrap_content"/>
 
+            <RatingBar
+                android:id="@+id/list_rating_bar_small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:stepSize="0.5"
+                android:numStars="5"
+                style="@style/Widget.AppCompat.RatingBar.Small"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -44,14 +53,6 @@
                 android:textSize="13sp"
                 android:textColor="@color/black"
                 android:text="Rating by: Myself"/>
-
-            <RatingBar
-                android:id="@+id/list_rating_bar_small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:stepSize="0.5"
-                 android:numStars="5"
-                style="@style/Widget.AppCompat.RatingBar.Small"/>
 
         </LinearLayout>
 

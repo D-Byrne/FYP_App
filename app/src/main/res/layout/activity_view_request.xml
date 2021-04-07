@@ -118,6 +118,19 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="0dp"/>
 
+                <Button
+                android:id="@+id/btn_view_request_author_ratings"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="20dp"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:foreground="?attr/selectableItemBackground"
+                android:background="@color/red_gradient_two"
+                android:text="Poster Ratings" />
+
                 <TextView
                     android:id="@+id/view_request_offer_tv"
                     android:layout_width="match_parent"
@@ -129,7 +142,9 @@
                     android:textColor="@color/black"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
-                    android:layout_marginTop="20dp"/>
+                    android:layout_marginTop="10dp"/>
+
+
 
                 <LinearLayout
                     android:layout_width="match_parent"

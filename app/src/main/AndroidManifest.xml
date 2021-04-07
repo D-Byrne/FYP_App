@@ -9,7 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FYP">
-        <activity android:name=".ListRatingsActivity"></activity>
+        <activity android:name=".ViewRatingActivity"></activity>
+        <activity android:name=".ListRatingsActivity" />
         <activity android:name=".EditOfferActivity" />
         <activity android:name=".AddReviewActivity" />
         <activity android:name=".UserRequestList" />

@@ -33,6 +33,10 @@ class ViewOfferActivity : AppCompatActivity() {
     var request = RequestModel()
     var offer = OfferModel()
 
+    var requestAuthorRating = false
+    var offerAuthorRating = true
+    var ownRating = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +66,7 @@ class ViewOfferActivity : AppCompatActivity() {
         }
 
         btn_view_ratings.setOnClickListener{
-            startActivityForResult(intentFor<ListRatingsActivity>(), 0)
+            startActivityForResult(intentFor<ListRatingsActivity>().putExtra("offer", offer).putExtra("offerAuthorRating", offerAuthorRating).putExtra("requestAuthorRating", requestAuthorRating).putExtra("ownRating", ownRating), 0)
         }
 
         btn_cancel_offer.setOnClickListener{

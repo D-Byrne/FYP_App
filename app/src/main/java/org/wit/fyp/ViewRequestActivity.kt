@@ -47,6 +47,9 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
     var ownRequest: Boolean = false
 
     var notComplete = true
+    var requestAuthorRating = true
+    var offerAuthorRating = false
+    var ownRating = false
 
     var offerAccept: Boolean = false
     var currentlyAcceptedId: String = ""
@@ -69,6 +72,11 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
         setRequestFields()
 
         getUserData()
+
+        btn_view_request_author_ratings.setOnClickListener{
+            startActivityForResult(intentFor<ListRatingsActivity>().putExtra("request", request).putExtra("requestAuthorRating", requestAuthorRating).putExtra("ownRating", ownRating).putExtra("offerAuthorRating", offerAuthorRating), 0)
+
+        }
 
         btn_add_offer.setOnClickListener{
             if(edit_text_add_offer.text.toString().trim().isNotEmpty()){

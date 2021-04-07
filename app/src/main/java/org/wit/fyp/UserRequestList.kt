@@ -34,6 +34,10 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
     var pendingRatingList = ArrayList<RequestModel>()
     var completedRequestsList = ArrayList<RequestModel>()
 
+    var offerAuthorRating = false
+    var requestAuthorRating = false
+    var ownRating = true
+
     var reqKey: String = ""
     var isEdit: Boolean = false
     var isDelete: Boolean = false
@@ -55,7 +59,7 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
         supportActionBar?.setDisplayShowTitleEnabled(false)
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.setDisplayShowHomeEnabled(false)
-        toolbar.title = "User Requests & Offers"
+        toolbar.title = "Active Requests"
        // toolbar.setSubtitle("Accepted Offers: ")
 
 
@@ -96,14 +100,36 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                                     invalidateOptionsMenu()}
             R.id.menu_top_done -> { isEdit = false
                                     isDelete =false
-                                    toolbar.title = "User Requests"
+
+                if(currentlyOnMain){
+                    toolbar.title = "Active Requests"
+
+                } else if(currentlyOnAccepted){
+                    toolbar.title = "Accepted Offers"
+
+                } else if(currentlyOnComplete){
+                    toolbar.title = "Completed Requests"
+
+                } else if(currentlyOnAll){
+                    toolbar.title = "All Requests/Offers"
+
+                } else if(currentlyOnPending){
+                    toolbar.title = "Pending Ratings"
+
+                }
+                                   // toolbar.title = "User Requests"
                                     invalidateOptionsMenu()}
+            R.id.menu_top_my_ratings ->{
+                startActivityForResult(intentFor<ListRatingsActivity>().putExtra("offerAuthorRating", offerAuthorRating).putExtra("requestAuthorRating", requestAuthorRating).putExtra("ownRating", ownRating), 0)
+
+            }
             R.id.menu_top_only_requests -> {
                 if(currentlyOnMain){
                     Toast.makeText(this, "Already viewing your requests.", Toast.LENGTH_SHORT).show()
                 } else if(!currentlyOnMain || currentlyOnAccepted || currentlyOnAll || currentlyOnPending || currentlyOnComplete){
                     val adapter = RequestAdapter(onlyRequestList, this@UserRequestList)
                     recyclerViewPerUser.adapter = adapter
+                    toolbar.title = "Active Requests"
 
                     currentlyOnMain = true
                     currentlyOnAccepted = false
@@ -118,6 +144,7 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                 } else if(!currentlyOnAccepted || currentlyOnMain || currentlyOnAll || currentlyOnPending || currentlyOnComplete){
                     val adapter = RequestAdapter(acceptedList, this@UserRequestList)
                     recyclerViewPerUser.adapter = adapter
+                    toolbar.title = "Accepted Offers"
 
                     currentlyOnAccepted = true
                     currentlyOnMain = false
@@ -132,6 +159,7 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                 } else if(!currentlyOnAll){
                     val adapter = RequestAdapter(requestList, this@UserRequestList)
                     recyclerViewPerUser.adapter = adapter
+                    toolbar.title = "All Requests/Offers"
 
                     currentlyOnAll = true
                     currentlyOnMain = false
@@ -146,6 +174,7 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                 } else if(!currentlyOnPending || currentlyOnMain || currentlyOnAll || currentlyOnAccepted || currentlyOnComplete){
                     val adapter = RequestAdapter(pendingRatingList, this@UserRequestList)
                     recyclerViewPerUser.adapter = adapter
+                    toolbar.title = "Pending Ratings"
 
                     currentlyOnPending = true
                     currentlyOnAll = false
@@ -160,6 +189,7 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                 } else if (!currentlyOnComplete || currentlyOnPending || currentlyOnAccepted || currentlyOnMain || currentlyOnAll){
                     val adapter = RequestAdapter(completedRequestsList, this@UserRequestList)
                     recyclerViewPerUser.adapter = adapter
+                    toolbar.title = "Completed Requests"
 
                     currentlyOnComplete = true
                     currentlyOnPending = false
@@ -235,9 +265,11 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
 
 
 
-                    if(model.authorId == FirebaseAuth.getInstance().currentUser!!.uid) {
+                    if(model.authorId == FirebaseAuth.getInstance().currentUser!!.uid && model.requestCompleted != true) {
                         requestList.add(model as RequestModel)
                         onlyRequestList.add(model as RequestModel)
+                    } else if(model.authorId == FirebaseAuth.getInstance().currentUser!!.uid){
+                        requestList.add(model)
                     }
                 }
                 if(onlyRequestList.size > 0 && currentlyOnMain){

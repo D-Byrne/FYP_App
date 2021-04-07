@@ -8,13 +8,28 @@ import kotlinx.android.synthetic.main.recycler_rating_view_card.view.*
 import org.wit.fyp.R
 import org.wit.fyp.models.RatingModel
 
-class RatingAdapter(var list:ArrayList<RatingModel>) : RecyclerView.Adapter<RatingAdapter.ViewHolder>(){
+class RatingAdapter(var list:ArrayList<RatingModel>, private val listener: OnItemClickListener) : RecyclerView.Adapter<RatingAdapter.ViewHolder>(){
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener{
         var ratingDetails = itemView.list_rating_details
         var ratingAuthor = itemView.list_rating_author_name
         var ratingValue = itemView.list_rating_bar_small
 
+        init {
+            itemView.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?){
+            val position = adapterPosition
+            if(position != RecyclerView.NO_POSITION){
+                listener.onItemClick(position)
+            }
+        }
+
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(position: Int)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,7 +42,7 @@ class RatingAdapter(var list:ArrayList<RatingModel>) : RecyclerView.Adapter<Rati
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int){
         holder.ratingDetails.text = list[position].ratingDetails
-        holder.ratingAuthor.text = list[position].authorName
+        holder.ratingAuthor.text = "Rated By: " + list[position].authorName
         holder.ratingValue.rating = list[position].ratingNumber.toFloat()
 
     }
