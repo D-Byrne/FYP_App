@@ -2,6 +2,8 @@ package org.wit.fyp
 
 import android.content.DialogInterface
 import android.content.Intent
+import android.net.InetAddresses
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -51,6 +53,10 @@ class ViewOfferActivity : AppCompatActivity() {
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
         setFromIntent()
+
+        view_offer_author_email.setOnClickListener{
+            composeEmail(arrayOf(view_offer_author_email.text.toString()))
+        }
 
         btn_accept_offer.setOnClickListener{
 
@@ -149,6 +155,7 @@ class ViewOfferActivity : AppCompatActivity() {
 
         if(offerAccept && (request.authorId == FirebaseAuth.getInstance().currentUser!!.uid) && request.requestCompleted != true){
             view_offer_author_email.isVisible = true
+            view_offer_click_email.isVisible = true
             btn_accept_offer.isVisible = false
             btn_edit_offer.isVisible = false
             btn_delete_offer.isVisible = false
@@ -176,5 +183,15 @@ class ViewOfferActivity : AppCompatActivity() {
         }
 
 
+    }
+
+    fun composeEmail(addresses: Array<String>){
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:")
+            putExtra(Intent.EXTRA_EMAIL, addresses)
+        }
+        if(intent.resolveActivity(packageManager) != null){
+            startActivity(intent)
+        }
     }
 }

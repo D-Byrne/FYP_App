@@ -57,11 +57,23 @@
                 android:gravity="center"/>
 
             <TextView
+                android:id="@+id/view_offer_click_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="normal"
+                android:textSize="20sp"
+                android:textColor="@color/black"
+                android:text="Click To Open in Email App"
+                android:visibility="gone"
+                android:gravity="center"/>
+
+            <TextView
                 android:id="@+id/view_offer_author_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textStyle="normal"
                 android:textSize="20sp"
+                android:textColor="@color/purple_700"
                 android:text="Email: testone@mail.com"
                 android:visibility="gone"
                 android:gravity="center"/>
