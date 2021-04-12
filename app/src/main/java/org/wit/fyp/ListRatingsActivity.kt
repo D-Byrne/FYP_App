@@ -133,8 +133,6 @@ class ListRatingsActivity : AppCompatActivity(), RatingAdapter.OnItemClickListen
     override fun onItemClick(position: Int) {
         val clickedItem: RatingModel = ratingList[position]
 
-        //Toast.makeText(this, "Yep: " + clickedItem.ratingNumber, Toast.LENGTH_SHORT).show()
-
         startActivityForResult(intentFor<ViewRatingActivity>().putExtra("rating", clickedItem), 0)
 
     }

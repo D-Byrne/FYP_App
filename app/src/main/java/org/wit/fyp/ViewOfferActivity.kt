@@ -85,7 +85,6 @@ class ViewOfferActivity : AppCompatActivity() {
                 cancelOffer()
 
                 val intent = Intent(this, RequestListActivity::class.java)
-                //intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 startActivity(intent)
             } else {
                 Toast.makeText(this, "Can't " + offerAccept, Toast.LENGTH_SHORT).show()
@@ -146,8 +145,6 @@ class ViewOfferActivity : AppCompatActivity() {
         offerAccept = intent.extras?.getBoolean("offer_accepted")!!
 
         toolbar_view_offer.title = offer.authorName + "'s Offer"
-
-        Toast.makeText(this, "Value: " + offerAccept, Toast.LENGTH_SHORT).show()
 
         view_offer_name.setText(offer.authorName)
         view_offer_amount.setText("€" + offer.amount)

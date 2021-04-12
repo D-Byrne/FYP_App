@@ -128,7 +128,6 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
         }
 
         if(request.offerAuthorRating == false && request.completedBy == FirebaseAuth.getInstance().currentUser!!.uid){
-            Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show()
             startActivityForResult(intentFor<AddReviewActivity>().putExtra("request", request).putExtra("accepted_offer", currentOffer).putExtra("ownRequest", ownRequest), 0)
         }else if(request.offerAuthorRating == true && request.completedBy == FirebaseAuth.getInstance().currentUser!!.uid){
             notComplete = false
@@ -180,7 +179,6 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
         if(FirebaseAuth.getInstance().currentUser!!.uid == request.authorId){
             ownRequest = true
-            //invalidateOptionsMenu()
         }
 
         database = Firebase.database.reference
@@ -196,8 +194,7 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
         if(offerExists){
             Toast.makeText(this, "You have already made an offer", Toast.LENGTH_SHORT).show()
         } else if(ownRequest){
-            //btn_add_offer.isVisible = false
-            //view_request_offer_field.isVisible = false
+
             Toast.makeText(this, "Can't post offer on own request.", Toast.LENGTH_SHORT).show()
         } else {
             database.child("requests").child(request.reqId!!).child("offers").child(id!!).setValue(offerModel)

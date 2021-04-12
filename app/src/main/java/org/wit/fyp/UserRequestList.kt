@@ -60,7 +60,6 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.setDisplayShowHomeEnabled(false)
         toolbar.title = "Active Requests"
-       // toolbar.setSubtitle("Accepted Offers: ")
 
 
         val layoutManager = LinearLayoutManager(this)
@@ -117,7 +116,6 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                     toolbar.title = "Pending Ratings"
 
                 }
-                                   // toolbar.title = "User Requests"
                                     invalidateOptionsMenu()}
             R.id.menu_top_my_ratings ->{
                 startActivityForResult(intentFor<ListRatingsActivity>().putExtra("offerAuthorRating", offerAuthorRating).putExtra("requestAuthorRating", requestAuthorRating).putExtra("ownRating", ownRating), 0)
@@ -201,8 +199,6 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                 }
             }
 
-            //android.R.id.home -> { Toast.makeText(this, "Hello", Toast.LENGTH_SHORT).show() }
-
         }
         return super.onOptionsItemSelected(item)
     }
@@ -250,9 +246,6 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                         toolbar.setSubtitle("Accepted Offers: 0")
 
                     }
-                   // Log.d("TAGLLE", data.child("offers").children)
-
-                   // Log.d("TAGLLE", data.child("offers").children.toString())
 
                     if(model.offerAuthorRating == false && model.completedBy == FirebaseAuth.getInstance().currentUser!!.uid){
                         pendingRatingList.add(model as RequestModel)
@@ -275,18 +268,15 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
                 if(onlyRequestList.size > 0 && currentlyOnMain){
                     val adapter = RequestAdapter(onlyRequestList, this@UserRequestList)
                     recyclerViewPerUser.adapter = adapter
-                    //Toast.makeText(applicationContext, reqId, Toast.LENGTH_SHORT).show()
                 }
             }
 
         })
-        //Toast.makeText(this, numberChildren, Toast.LENGTH_SHORT).show()
     }
 
     override fun onItemClick(position: Int) {
         var clickedItem: RequestModel = requestList[position]
 
-        //Toast.makeText(this, "Request $position clicked", Toast.LENGTH_SHORT).show()
         if(currentlyOnMain){
             clickedItem = onlyRequestList[position]
         } else if(currentlyOnAll){
@@ -299,10 +289,8 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
             clickedItem = completedRequestsList[position]
         }
 
-        //val clickedItem: RequestModel = requestList[position]
 
         if(isEdit && (clickedItem.authorId == FirebaseAuth.getInstance().currentUser!!.uid)) {
-            //Toast.makeText(this, "Editing", Toast.LENGTH_SHORT).show()
 
             startActivityForResult(intentFor<AddRequestActivity>().putExtra("edit_request", clickedItem), 0)
         }else if( isEdit && (clickedItem.authorId != FirebaseAuth.getInstance().currentUser!!.uid)){
@@ -310,7 +298,6 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
             Toast.makeText(this, "Can't edit other users requests", Toast.LENGTH_SHORT).show()
 
         } else if(isDelete && (clickedItem.authorId == FirebaseAuth.getInstance().currentUser!!.uid && clickedItem.requestCompleted != true)){
-            //Toast.makeText(this, "Delete", Toast.LENGTH_SHORT).show()
 
             val builder = AlertDialog.Builder(this)
             builder.setTitle("Are You Sure?")
@@ -333,8 +320,6 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
         } else{
             startActivityForResult(intentFor<ViewRequestActivity>().putExtra("view_request_model", clickedItem), 0)
         }
-        //Toast.makeText(this, "RequestId: ${clickedItem.reqId}", Toast.LENGTH_SHORT).show()
-        //startActivityForResult(intentFor<ViewRequestActivity>().putExtra("view_request_model", clickedItem), 0)
 
     }
 }

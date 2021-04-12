@@ -35,8 +35,6 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
     var requestList = ArrayList<RequestModel>()
 
     var currentUser = UserModel()
-   // var adapter = RequestAdapter(requestList, this)
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,8 +77,6 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
                                   startActivity(Intent(this, LoginActivity::class.java))
                                   finish()}
 
-            //android.R.id.home -> { finish() }
-
         }
         return super.onOptionsItemSelected(item)
     }
@@ -109,7 +105,6 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
                 if(requestList.size > 0){
                     val adapter = RequestAdapter(requestList, this@RequestListActivity)
                     recyclerView.adapter = adapter
-                    //Toast.makeText(applicationContext, reqId, Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -117,9 +112,7 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
     }
 
     override fun onItemClick(position: Int) {
-        //Toast.makeText(this, "Request $position clicked", Toast.LENGTH_SHORT).show()
         val clickedItem: RequestModel = requestList[position]
-        //Toast.makeText(this, "RequestId: ${clickedItem.reqId}", Toast.LENGTH_SHORT).show()
         startActivityForResult(intentFor<ViewRequestActivity>().putExtra("view_request_model", clickedItem), 0)
 
     }
