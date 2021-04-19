@@ -1,5 +1,6 @@
 package org.wit.fyp
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -16,6 +18,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 import kotlinx.android.synthetic.main.activity_request_list.*
+import kotlinx.android.synthetic.main.activity_user_request_list.*
 import kotlinx.android.synthetic.main.activity_view_offer.*
 import org.wit.fyp.adapters.RequestAdapter
 import org.wit.fyp.models.RequestModel
@@ -33,8 +36,15 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
     var reqKey: String = ""
 
     var requestList = ArrayList<RequestModel>()
+    var filteredList = ArrayList<RequestModel>()
 
     var currentUser = UserModel()
+
+    var filtering = false
+    var selectedCounty = ""
+    val countyNames = arrayOf("Carlow", "Cavan", "Clare", "Cork", "Donegal", "Dublin", "Galway", "Kerry", "Kildare", "Kilkenny",
+            "Laois", "Leitrim", "Limerick", "Longford", "Louth", "Mayo", "Meath", "Monaghan", "Offaly", "Roscommon",
+            "Sligo", "Tipperary", "Waterford", "Westmeath", "Wexford", "Wicklow")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,14 +78,86 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_top_view_list_requests, menu)
+        if(filtering)menu!!.getItem(0).setVisible(true)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
-            R.id.menu_logout -> { FirebaseAuth.getInstance().signOut()
-                                  startActivity(Intent(this, LoginActivity::class.java))
-                                  finish()}
+            R.id.menu_filter_list -> {
+
+
+                val arrayChecked = booleanArrayOf(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false)
+
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Filter by County")
+
+                builder.setMultiChoiceItems(countyNames, arrayChecked, {dialog, which, isChecked ->
+                    arrayChecked[which] = isChecked
+                    val county = countyNames[which]
+
+                    Toast.makeText(this, "${county.toString()} clicked.", Toast.LENGTH_SHORT).show()
+                })
+
+                builder.setPositiveButton("Ok"){_, _ ->
+                    selectedCounty = ""
+                    filteredList.clear()
+                    var count: Int = 0
+
+                    for(i in 0 until countyNames.size){
+                        if (arrayChecked[i] == true){
+                            count++
+                        }
+                    }
+
+                    for (i in 0 until countyNames.size){
+                        val checked = arrayChecked[i]
+
+                        if(checked && count == 1){
+                            selectedCounty = countyNames[i].toString()
+                            //Toast.makeText(this, "You Selected ${countyNames[i].toString()}", Toast.LENGTH_SHORT).show()
+                            for (request in requestList){
+                                if(request.requestLocation == countyNames[i]){
+                                    filteredList.add(request)
+                                }
+                            }
+
+                        } else if(checked && count > 1) {
+                            Toast.makeText(this, "Can only select one county.", Toast.LENGTH_SHORT).show()
+                        } else{
+
+                        }
+                    }
+
+                    if(filteredList.size > 0){
+                        val adapter = RequestAdapter(filteredList, this@RequestListActivity)
+                        recyclerView.adapter = adapter
+
+                        filtering = true
+                        invalidateOptionsMenu()
+                    }
+
+                }
+
+                builder.show()
+
+            }
+
+            R.id.menu_logout -> {
+
+                FirebaseAuth.getInstance().signOut()
+                startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            }
+
+            R.id.menu_top_undo_filter -> {
+                filtering = false
+                invalidateOptionsMenu()
+
+                val adapter = RequestAdapter(requestList, this@RequestListActivity)
+                recyclerView.adapter = adapter
+
+            }
 
         }
         return super.onOptionsItemSelected(item)
@@ -102,7 +184,7 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
                     }
 
                 }
-                if(requestList.size > 0){
+                if(requestList.size > 0 && !filtering){
                     val adapter = RequestAdapter(requestList, this@RequestListActivity)
                     recyclerView.adapter = adapter
                 }

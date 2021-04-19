@@ -3,6 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/menu_top_undo_filter"
+        android:title="Show All"
+        app:showAsAction="always"
+        android:visible="false"/>
+
+    <item
+        android:id="@+id/menu_filter_list"
+        android:icon="@drawable/ic_baseline_filter_list_24"
+        app:showAsAction="always"
+        android:title="Filter List"
+        />
+
+    <item
         android:id="@+id/menu_logout"
         android:icon="@drawable/ic_baseline_exit_to_app_24"
         app:showAsAction="always"

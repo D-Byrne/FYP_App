@@ -48,6 +48,7 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
     var currentlyOnPending = false
     var currentlyOnComplete = false
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_request_list)
