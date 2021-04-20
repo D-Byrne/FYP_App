@@ -96,7 +96,6 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
                     arrayChecked[which] = isChecked
                     val county = countyNames[which]
 
-                    Toast.makeText(this, "${county.toString()} clicked.", Toast.LENGTH_SHORT).show()
                 })
 
                 builder.setPositiveButton("Ok"){_, _ ->
@@ -115,7 +114,6 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
 
                         if(checked && count == 1){
                             selectedCounty = countyNames[i].toString()
-                            //Toast.makeText(this, "You Selected ${countyNames[i].toString()}", Toast.LENGTH_SHORT).show()
                             for (request in requestList){
                                 if(request.requestLocation == countyNames[i]){
                                     filteredList.add(request)
@@ -194,7 +192,15 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
     }
 
     override fun onItemClick(position: Int) {
-        val clickedItem: RequestModel = requestList[position]
+
+        var clickedItem: RequestModel = requestList[position]
+
+        if(filtering){
+            clickedItem = filteredList[position]
+        }else {
+            clickedItem = requestList[position]
+        }
+
         startActivityForResult(intentFor<ViewRequestActivity>().putExtra("view_request_model", clickedItem), 0)
 
     }

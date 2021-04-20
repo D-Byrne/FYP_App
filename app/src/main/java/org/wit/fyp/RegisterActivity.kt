@@ -28,8 +28,6 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-       // FirebaseDatabase.getInstance().setLogLevel(Logger.Level.DEBUG)
-
         database = Firebase.database.reference
 
         btn_register.setOnClickListener{

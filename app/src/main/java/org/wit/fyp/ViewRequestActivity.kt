@@ -116,6 +116,7 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
         view_request_details.setText(request.requestDetails)
         view_request_deadline.setText("Accepting Offers Until: " + request.requestDeadline)
         view_request_location.setText("Location: " + request.requestLocation)
+        btn_view_request_author_ratings.setText("${request.authorName}'s Ratings")
 
         toolbar_view_request.title = request.authorName + "'s Request"
 

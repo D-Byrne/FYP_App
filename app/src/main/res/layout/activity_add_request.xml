@@ -58,6 +58,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="text"
                         android:textColor="@color/black"
+                        android:maxLength="60"
                         tools:text="Move Some Stuff For Me" />
 
                 </com.google.android.material.textfield.TextInputLayout>
