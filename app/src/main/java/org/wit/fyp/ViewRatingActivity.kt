@@ -40,6 +40,7 @@ class ViewRatingActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    //Used to set fields with content of rating which was selected such as the star count for the star rating component, the details of the ratings and the rating author.
     private fun setFromIntent(){
         rating = intent.extras?.getParcelable<RatingModel>("rating")!!
 

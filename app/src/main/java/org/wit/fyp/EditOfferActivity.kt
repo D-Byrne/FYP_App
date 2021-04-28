@@ -44,6 +44,7 @@ class EditOfferActivity : AppCompatActivity() {
         setFromIntent()
     }
 
+    //Gets request and offer from ViewOfferActivity to determine which offer needs to be updated.
     private fun setFromIntent(){
         request = intent.extras?.getParcelable<RequestModel>("request")!!
         offer = intent.extras?.getParcelable<OfferModel>("view_offer")!!
@@ -54,6 +55,7 @@ class EditOfferActivity : AppCompatActivity() {
 
     }
 
+    //Validated on button press in onCreate value in field is taken and pushed to respective field in database
     private fun saveEdit(){
         database.child("requests/${request.reqId}/offers/${offer.offerId}/amount").setValue(edit_text_edit_offer.text.toString().trim())
     }

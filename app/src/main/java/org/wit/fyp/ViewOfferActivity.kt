@@ -92,10 +92,13 @@ class ViewOfferActivity : AppCompatActivity() {
 
         }
 
+        //Edit offer button. If pressed user is sent to page to edit offer. Request and offer details are sent to determine which offer in which request is being edited
         btn_edit_offer.setOnClickListener{
             startActivityForResult(intentFor<EditOfferActivity>().putExtra("request", request).putExtra("view_offer", offer), 0)
         }
 
+        //Delete button will create alert dialogue asking user if they are sure they want to delete and offer. If they say yes the offer is deleted from the database
+        // and the user is sent to the RequestListActivity. OTherwise i they press no the dialogue is removed.
         btn_delete_offer.setOnClickListener{
 
             val builder = AlertDialog.Builder(this)
@@ -126,16 +129,24 @@ class ViewOfferActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    //Function used when request creator accepts an offer.
+    //OfferAccepted value is written to the database and set to true.
     private fun acceptOffer(){
         database.child("requests/${request.reqId}/offers/${offer.offerId}/offerAccepted").setValue(true)
         offerAccept = true
     }
 
+    //Function used when request creator cancels an offer.
+    //OfferAccepted value is written to the database and set to false.
     private fun cancelOffer(){
         database.child("requests/${request.reqId}/offers/${offer.offerId}/offerAccepted").setValue(false)
         offerAccept = false
     }
 
+    //Used to get the offer information and request information from the request and offer which the user came from
+    //to set fields When viewing an offer. Checks done to determine who is viewing an offers and what buttons and textViews they are allowed to see.
+    //Only creator of request is shown buttons to accept or cancel and email if an offer is accepted.
+    //Only creator of offer is allowed to see edit and delete buttons for offer.
     fun setFromIntent(){
         request = intent.extras?.getParcelable<RequestModel>("request")!!
         offer = intent.extras?.getParcelable<OfferModel>("view_offer")!!
@@ -182,6 +193,7 @@ class ViewOfferActivity : AppCompatActivity() {
 
     }
 
+    //Function used to prompt user to select email app and then populate the 'to' field in that email app.
     fun composeEmail(addresses: Array<String>){
         val intent = Intent(Intent.ACTION_SENDTO).apply {
             data = Uri.parse("mailto:")

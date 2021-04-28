@@ -73,6 +73,8 @@ class ListRatingsActivity : AppCompatActivity(), RatingAdapter.OnItemClickListen
     }
 
 
+    //Takes offer from ViewOfferActivity to determine the id for whose ratings should be shown.
+    //Shows own ratings if Accessed from UserRequestListActivity.
     fun setFromIntent(){
 
         offerAuthorRating = intent.extras?.getBoolean("offerAuthorRating")!!
@@ -103,6 +105,7 @@ class ListRatingsActivity : AppCompatActivity(), RatingAdapter.OnItemClickListen
 
     }
 
+    //Retrieves Ratings from database and adds them to a list of rating objects. RecyclerView adapter is set with this list to show list of ratings
     private fun getRatings() {
 
         database.addValueEventListener(object : ValueEventListener {
@@ -130,6 +133,7 @@ class ListRatingsActivity : AppCompatActivity(), RatingAdapter.OnItemClickListen
         })
     }
 
+    //Click listener which sends to user to the ViewRating Activity with the rating that they selected to populate fields in the next activity
     override fun onItemClick(position: Int) {
         val clickedItem: RatingModel = ratingList[position]
 

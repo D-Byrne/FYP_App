@@ -98,6 +98,7 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
         return super.onCreateOptionsMenu(menu)
     }
 
+    //Top toolbar click listener which sends the user to the AddReviewActivty if they press the tick on the top toolbar to complete the rating.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
 
@@ -108,6 +109,10 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
         return super.onOptionsItemSelected(item)
     }
 
+    //Set the fields of the request such as title, auhtor name, details, deadline, location from the requests which was sent in the intent from the click listener
+    // on a list of requests on RequestListActivty or UserRequestList.
+    //Determines whether the person viewing the request is the person who created it or if an offer has been accepted and the tick item to complete the request can be shown.
+    //Checks if the user viewing the request is the person who completed it for the request creator and hasn't created a rating yet.
     fun setRequestFields(){
         request = intent.extras?.getParcelable<RequestModel>("view_request_model")!!
 
@@ -136,6 +141,7 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
     }
 
+    //Use to retrieve offers from the database and add them to a list which is used to set the recyclerview adapter to list the offer beneath the request
     private fun getOffer(){
 
         database = Firebase.database.reference.child("requests").child(request.reqId!!).child("offers")
@@ -170,6 +176,10 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
     }
 
+    //Used to add an offer to the database.
+    //Checks if the person trying to create the offer is the creator of the post in which case they won't be allowed to create an offer fro their own request.
+    //Checks if the user has already created an offer in which case they won't be allowed to created another.
+    //If the user is not the creator of the request and hasn't already created an offer the offer wll be written to the database.
     private fun addOffer(){
 
         for(offer in offerList){
@@ -203,6 +213,7 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
     }
 
+    //ed to get the first and last names and email of the current user from the database.
     private fun getUserData(){
 
         database.child("users").child(FirebaseAuth.getInstance().currentUser!!.uid).addValueEventListener(object:
@@ -229,6 +240,12 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
     }
 
+    //Click listener for offers
+    //Before sending the user to the ViewOfferActivity chcks are adone to see who is tryin got view the offer.
+    //If the request creator is clikcing an offer the request currently being viewed and the offer that was pressed will be sent with the intent as well as a
+    // boolean to determine whether the offer is accepted or not.
+    //If the creator of the offer presses the offer they will be sent with the request being viewed and the offer that was pressed being sent in the intent to the ViewOfferActivity
+    // A boolean is also sent ott determine that the user is viewing their own request.
     override fun onItemClick(position: Int) {
 
        checkOffer()
@@ -255,6 +272,7 @@ class ViewRequestActivity : AppCompatActivity(), OfferAdapter.OnItemClickListene
 
     }
 
+    //Used to check whether the current request contains an offer which has been accepted
     fun checkOffer(){
         for (offer in offerList){
                 if(offer.offerAccepted == true) {

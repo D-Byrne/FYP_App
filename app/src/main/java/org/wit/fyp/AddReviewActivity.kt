@@ -82,6 +82,8 @@ class AddReviewActivity : AppCompatActivity() {
         setFromIntent()
     }
 
+    //When back button is pressed an alert dialogue will ask the user whether they want to complete the request.
+
     override fun onBackPressed() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Are You Sure?")
@@ -95,6 +97,8 @@ class AddReviewActivity : AppCompatActivity() {
         builder.show()
     }
 
+    //gets the request which is being completed and the offer of the person who completed it from ViewRequestActivity.
+    //Used to determine which person is rating which. Uses gathered request and offer to set title of toolbar to whoever is being rated.
     fun setFromIntent(){
         currentOffer = intent.extras?.getParcelable<OfferModel>("accepted_offer")!!
         currentRequest = intent.extras?.getParcelable<RequestModel>("request")!!
@@ -116,6 +120,7 @@ class AddReviewActivity : AppCompatActivity() {
         }
     }
 
+    //Sets values in the request in the database when the creator of the request has marked as complete and has completed the rating of the user who completed the request.
     fun writeToDatabase(){
 
         val id = database.push().key
@@ -128,6 +133,7 @@ class AddReviewActivity : AppCompatActivity() {
         database.child("requests/${currentRequest.reqId}/offers/${currentOffer.offerId}/requestCompleted").setValue(true)
     }
 
+    //sets values in the request and one of its child offers in the database when the person who created the offer and completed the request and provided a rating
     fun writeToDatabaseOfferAuthor(){
 
         val id = database.push().key
@@ -138,6 +144,7 @@ class AddReviewActivity : AppCompatActivity() {
 
     }
 
+    //gets the first and last name of the logged in user from the database.
     private fun getUserData(){
 
         database.child("users").child(FirebaseAuth.getInstance().currentUser!!.uid).addValueEventListener(object:

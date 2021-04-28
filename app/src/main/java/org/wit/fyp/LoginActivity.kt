@@ -20,11 +20,14 @@ class LoginActivity : AppCompatActivity() {
         } else { }
 
 
-
+        //Starts RegistActivty if pressed
         text_view_register.setOnClickListener{
             startActivity(Intent(this, RegisterActivity::class.java))
         }
 
+        //Takes input from two non empty fields and passes their values to FirebaseAuth signin with email and password.
+        //IF details valid user is sent to RequestListActivity which is the home page of the app.
+        //Otherwise FirebaseAuth will return error which will appear in toast popup message.
         btn_login.setOnClickListener{
             when{
                 TextUtils.isEmpty(edit_text_login_email.text.toString().trim { it <= ' '}) ->{

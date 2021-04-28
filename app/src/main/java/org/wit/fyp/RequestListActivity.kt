@@ -61,7 +61,8 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
         supportActionBar?.setDisplayHomeAsUpEnabled(false)
         supportActionBar?.setDisplayShowHomeEnabled(false)
         toolbar_view_request_list.title = "Home"
-        
+
+        //Bottom navigation button click listener
         request_list_nav_menu.setOnNavigationItemSelectedListener{
             when(it.itemId){
 
@@ -76,12 +77,19 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
         getRequest()
     }
 
+    //USed to inflate top toolbar with menu_top_toolbar_list_requests.
+    //Check done to see whether user is currently viewing a filtered list of requests.
+    //IF true then the 'Show All' menu is made visible on the toolbar. Otherwise its hidden
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_top_view_list_requests, menu)
         if(filtering)menu!!.getItem(0).setVisible(true)
         return super.onCreateOptionsMenu(menu)
     }
 
+    //Used to determine the effect of pressing menu items on toolbar.
+    //Logout button logs user out.
+    //Filter button contains code to create multiple choice alert dialogue allowing user to select county to filter by
+    //Selecting filter will set adapter with new list of requests whose location is the county which was selected on filter.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.menu_filter_list -> {
@@ -161,6 +169,8 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
         return super.onOptionsItemSelected(item)
     }
 
+    //Gets Requests from database to populate recyclerview.
+    //IF user is filtering adapter will not be set to avoid users filter being replaced with original list
     private fun getRequest(){
 
         database.addValueEventListener(object: ValueEventListener{
@@ -191,6 +201,8 @@ class RequestListActivity : AppCompatActivity(), RequestAdapter.OnItemClickListe
         })
     }
 
+    //Handles Clicks on requests.
+    //Clicking on request will bring user to viewRequestActivity and request clicked on will be sent in intent to populate fields in ViewRequestActivity
     override fun onItemClick(position: Int) {
 
         var clickedItem: RequestModel = requestList[position]

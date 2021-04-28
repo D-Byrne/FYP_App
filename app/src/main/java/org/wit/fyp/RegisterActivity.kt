@@ -30,6 +30,9 @@ class RegisterActivity : AppCompatActivity() {
 
         database = Firebase.database.reference
 
+        //Register button containing which first checks fields. Once fields are checked it moves on to creating the user with FirebaseAuth.
+        //Once the user is successfully created the users additionalinformation is written to firebase database.
+        //User is then sent to RequestListActivy page.
         btn_register.setOnClickListener{
             when{
                 TextUtils.isEmpty(edit_text_register_email.text.toString().trim { it <= ' '}) ->{
@@ -103,10 +106,13 @@ class RegisterActivity : AppCompatActivity() {
 
     }
 
+    //Used to validate first and last name fields.
     fun isLetters(string: String): Boolean {
         return string.all { it.isLetter() }
     }
 
+    //Once fields have been validated and the account is successfully registered a user object with additionl fields is written to the database
+    //using the id of the newly created user as the reference
     private fun writeToDatabase(){
         firstName = edit_text_register_first_name.text.toString().trim()
         lastName = edit_text_register_last_name.text.toString().trim()

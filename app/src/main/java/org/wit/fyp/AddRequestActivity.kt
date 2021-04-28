@@ -131,11 +131,13 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
 
     }
 
+    //Sets the layout of the top toolbar
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_top_add_request, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
+    //Used to to close current activity if back arrow on top toolbar is pressed
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
 
@@ -171,6 +173,7 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
 
     }
 
+    //Used if user is updating a request from UserRequestListActivity.
     fun updateRequest(){
 
         var newTitle = edit_text_add_request_title.text.toString().trim()
@@ -188,6 +191,8 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
 
     }
 
+    //Used when creating new request. Called once fields have been validated in onCreate when add request button is pressed.
+    //Takes input info from fields and creates request object which is pushed to database.
     fun writeToDatabase(){
 
         var title = edit_text_add_request_title.text.toString().trim()
@@ -203,6 +208,7 @@ class AddRequestActivity : AppCompatActivity(), DatePickerDialog.OnDateSetListen
         database.child("requests").child(id!!).setValue(requestModel)
     }
 
+    //Used to get first and last names of currently logged in user to add a name to the request object when its created
     private fun getData(){
         database.child("users").child(FirebaseAuth.getInstance().currentUser!!.uid).addValueEventListener(object: ValueEventListener {
             override fun onCancelled(error: DatabaseError){

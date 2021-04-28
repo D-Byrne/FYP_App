@@ -66,6 +66,7 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
         val layoutManager = LinearLayoutManager(this)
         recyclerViewPerUser.layoutManager = layoutManager
 
+        //Click listener for bottom navigation bar
         user_request_list_nav_menu.setOnNavigationItemSelectedListener {
 
             when(it.itemId) {
@@ -81,6 +82,10 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
 
     }
 
+    //Used to inflate menu with menu_top_main.
+    //Conditions set to determine whether or not ot show edit, delete, and cance buttons.
+    //When showing one of edit or delete buttons cancel button is shown.
+    //IF showing both edit and delete buttons cancel button is not shown.
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.menu_top_main, menu)
         if(isEdit || isDelete) menu!!.getItem(0).setVisible(true)
@@ -90,6 +95,10 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
         return super.onCreateOptionsMenu(menu)
     }
 
+    //Click Listeners for top toolbar.
+    //Booleans used to determine which list of request user is currently viewing and how that will effect what happens if they try to move to a different list.
+    //Depending on list selected the recyclerview adapter will be set with a different list.
+    //After pressing each option the toolbar is invalidated and refreshed to display the current list shownin the title.
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
             R.id.menu_top_delete -> { isDelete = true
@@ -204,6 +213,14 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
         return super.onOptionsItemSelected(item)
     }
 
+    //Gets requests and iterates through the offers inside of each request to determine which list they are put in.
+    //Requests where user needs to provide a rating are added to pendingRatingList
+    //Requests where a users offer has been accepted are added into the acceptedList
+    //Requests which the user has completed are added to the completedRequestList
+    //Requests which hve been created by the user are added to onlyRequestList
+    //Requests which have been created by the user or contain an offer created by the user are added to requestList
+    //If new requests are added the adapter will only change if the user is on the main view which means they are viewing the onlyRequestList and the menu item
+    //they are viewing is active requests
     fun getRequests(){
 
         database.addValueEventListener(object: ValueEventListener {
@@ -275,6 +292,13 @@ class UserRequestList : AppCompatActivity(), RequestAdapter.OnItemClickListener 
         })
     }
 
+    //Click Listener which determines what happens when user clicks on a request.
+    //If the user has pressed the edit button the user is taken to the addRequestActivity with the request they selected passsed in intent to populate the fields in
+    // addRequestACtivity
+    //If the user has selected has pressed the delete button an alert dialgoue asking if they want to the delete the selected request will appear. IF the user selects yes the
+    //the request is deleted from the database.
+    //Checks done at the beginning to determine whcih list a user is viewing to ensure that the click listener takes the request from the correct list to send in intent to either
+    //view, edit, or delete.
     override fun onItemClick(position: Int) {
         var clickedItem: RequestModel = requestList[position]
 
