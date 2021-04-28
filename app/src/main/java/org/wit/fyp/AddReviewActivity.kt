@@ -105,12 +105,12 @@ class AddReviewActivity : AppCompatActivity() {
             userRating.authorName = currentRequest.authorName
 
             toolbar_review.title = "Rate ${currentOffer.authorName}"
-            Toast.makeText(this, currentOffer.authorName, Toast.LENGTH_SHORT).show()
+           // Toast.makeText(this, currentOffer.authorName, Toast.LENGTH_SHORT).show()
         }else{
             userRating.authorId = FirebaseAuth.getInstance().currentUser!!.uid
             //userRating.authorName = currentRequest.authorName
 
-            Toast.makeText(this, currentRequest.authorName, Toast.LENGTH_SHORT).show()
+            //Toast.makeText(this, currentRequest.authorName, Toast.LENGTH_SHORT).show()
 
             toolbar_review.title = "Rate ${currentRequest.authorName}"
         }
